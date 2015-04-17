@@ -1,0 +1,67 @@
+<div class="form-group">
+    <label for="inputServicePackageName" class="col-sm-3 control-label"><%= content.src_ip %></label>
+    <div class="col-sm-9">
+        <input type="text" class="form-control" id="DNSRedirect_SourceIP" name="DNSRedirect_SourceIP" />
+    </div>
+</div>
+<div class="form-group">
+    <label for="inputServicePackageName" class="col-sm-3 control-label"><%= content.src_port %></label>
+    <div class="col-sm-9">
+        <input type="text" class="form-control" id="DNSRedirect_SourcePort" name="DNSRedirect_SourcePort" />
+    </div>
+</div>
+<div class="form-group">
+    <label for="inputServicePackageName" class="col-sm-3 control-label"><%= content.protocol %></label>
+    <div class="col-sm-9">
+        <input type="text" class="form-control" id="DNSRedirect_Protocol" name="DNSRedirect_Protocol" />
+    </div>
+</div>
+<div class="form-group">
+    <label for="inputServicePackageName" class="col-sm-3 control-label"><%= content.dns_original_dst_ip %></label>
+    <div class="col-sm-9">
+        <input type="text" class="form-control" id="DNSRedirect_DestinationIP" name="DNSRedirect_DestinationIP" />
+    </div>
+</div>
+<div class="form-group">
+    <label for="inputServicePackageName" class="col-sm-3 control-label"><%= content.dst_port %></label>
+    <div class="col-sm-9">
+        <input type="text" class="form-control" id="DNSRedirect_DestinationPort" name="DNSRedirect_DestinationPort" />
+    </div>
+</div>
+<div class="form-group">
+    <label for="inputServicePackageName" class="col-sm-3 control-label"><%= content.dns_modify_dst_ip %></label>
+    <div class="col-sm-9">
+        <input type="text" class="form-control" id="DNSRedirect_ModifyDestinationIP" name="DNSRedirect_ModifyDestinationIP" />
+    </div>
+</div>
+<script>
+    function dns_redirect_policy_content(){
+        var temp = {SourceIP:"",SourcePort:"",Protocol:"",DestinationIP:"",DestinationPort:"",ModifyDstIP:""};
+        temp.SourceIP = $("input#DNSRedirect_SourceIP").val();
+        temp.SourcePort = $("input#DNSRedirect_SourcePort").val();
+        temp.Protocol = $("input#DNSRedirect_Protocol").val();
+        temp.DestinationIP = $("input#DNSRedirect_DestinationIP").val();
+        temp.DestinationPort = $("input#DNSRedirect_DestinationPort").val();
+        temp.ModifyDstIP = $("input#DNSRedirect_ModifyDestinationIP").val();
+        return $.toJSON(temp);
+    }
+
+    function dns_redirect_policy_content_clear(){
+        $("input#DNSRedirect_SourceIP").attr("value","");
+        $("input#DNSRedirect_SourcePort").attr("value","");
+        $("input#DNSRedirect_Protocol").attr("value","");
+        $("input#DNSRedirect_DestinationIP").attr("value","");
+        $("input#DNSRedirect_DestinationPort").attr("value","");
+        $("input#DNSRedirect_ModifyDestinationIP").attr("value","");
+    }
+
+    function dns_redirect_policy_content_modify(content){
+        var PolicyContent = eval("("+content+")");
+        $("input#DNSRedirect_SourceIP").attr("value",PolicyContent.SourceIP);
+        $("input#DNSRedirect_SourcePort").attr("value",PolicyContent.SourcePort);
+        $("input#DNSRedirect_Protocol").attr("value",PolicyContent.Protocol);
+        $("input#DNSRedirect_DestinationIP").attr("value",PolicyContent.DestinationIP);
+        $("input#DNSRedirect_DestinationPort").attr("value",PolicyContent.DestinationPort);
+        $("input#DNSRedirect_ModifyDestinationIP").val(PolicyContent.ModifyDstIP);
+    }
+ </script>

@@ -1,0 +1,76 @@
+<script>
+    var bar_label = [];//后面计算
+    var bar_dataset_tx = {
+        fillColor : "rgba(220,220,220,0.5)",
+        strokeColor : "rgba(220,220,220,0.5)",
+        data : []
+    };
+    var bar_dataset_rx = {
+        fillColor : "rgba(151,187,205,0.5)",
+        strokeColor : "rgba(151,187,205,0.5)",
+        data : []
+    };
+    var bar_datasets = [bar_dataset_tx,bar_dataset_rx];
+    <%for (var i=0;i<host.Network.length;i++){%>
+    bar_datasets[0].data[<%=i%>] = <%= host.Network[i].TxSpeed/1000%>;
+    bar_datasets[1].data[<%=i%>] = <%= host.Network[i].RxSpeed/1000%>;
+    bar_label[<%=i%>] = "<%= host.Network[i].Name%>";
+    <%}%>
+    var pie_data =
+            [
+                [
+                    {value: <%if(host.status!="offline"){%><%= host.CPUUsed%><%}else{%>0<%}%>,color: "#AAAAAA",label: "used"},
+                    {value: <%if(host.status!="offline"){%><%= 100-host.CPUUsed%><%}else{%>100<%}%>,color:"#44A3E4",label: "free"}
+                ],
+                [
+                    {value: <%if(host.status!="offline"){%><%= host.MemoryTotal -host.mem_free%><%}else{%>0<%}%>,color: "#AAAAAA",label: "used"},
+                    {value: <%if(host.status!="offline"){%><%= host.mem_free %><%}else{%>100<%}%>,color:"#44A3E4",label: "free"}
+                ],
+                [
+                    {value: <%if(host.status!="offline"){%><%= host.DiskTotal -host.disk_free%><%}else{%>0<%}%>,color: "#AAAAAA",label: "used"},
+                    {value: <%if(host.status!="offline"){%><%= host.disk_free %><%}else{%>100<%}%>,color:"#44A3E4",label: "free"}
+                ]
+            ];
+    var bar_data = {
+        labels : bar_label,
+        datasets : bar_datasets
+    };
+    $("document").ready(function(){
+        //画扇形图
+        var chart_list = ["id_cpu_rt_chart","id_memory_rt_chart","id_disk_rt_chart"];
+        for(var i=0; i<chart_list.length; i++){
+            var name = "#"+chart_list[i];
+            var ctx = $(name).get(0).getContext("2d");
+            //var myNewChart = new Chart(ctx);
+            var myPieChart = new Chart(ctx).Pie(pie_data[i],{});
+        }
+        //画圆柱图
+        var ctx = $("#id_network_rt_chart").get(0).getContext("2d");
+        //var myNewChart = new Chart(ctx);
+        var BarChart = new Chart(ctx).Bar(bar_data,{});
+    });
+</script>
+<!--实时信息-->
+<div class="row placeholders">
+<%if(host.status=="offline"){%><h4>status: OFFLINE</h4><%}%>
+    <div class="col-xs-6 col-sm-3 placeholder">
+        <h4>CPU</h4>
+        <span class="text-muted"><%if(host.status!="offline"){%><%= host.CPUUsed %><%}else{%>0<%}%>%/<%= host.CPUNum %> X <%= host.CPUMhz %>  Mhz</span><br>
+        <canvas id="id_cpu_rt_chart" width="160" height="160"></canvas>
+    </div>
+    <div class="col-xs-6 col-sm-3 placeholder">
+        <h4>Memory</h4>
+        <span class="text-muted"><%if(host.status!="offline"){%><%= host.MemoryTotal -host.mem_free%><%}else{%>0<%}%> / <%= host.MemoryTotal %> M</span><br>
+        <canvas id="id_memory_rt_chart" width="160" height="160"></canvas>
+    </div>
+    <div class="col-xs-6 col-sm-3 placeholder">
+        <h4>Disk</h4>
+        <span class="text-muted"><%if(host.status!="offline"){%><%= host.DiskTotal -host.disk_free%><%}else{%>0<%}%> / <%= host.DiskTotal %> G</span><br>
+        <canvas id="id_disk_rt_chart" width="160" height="160"></canvas>
+    </div>
+    <div class="col-xs-6 col-sm-3 placeholder">
+        <h4>Network</h4>
+        <span class="text-muted"><%= host.Network.length%> nic ( Tx|Rx KB/s) </span><br>
+        <canvas id="id_network_rt_chart" width="200" height="160"></canvas>
+    </div>
+</div>

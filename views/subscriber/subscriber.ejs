@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="images/telecom.ico">
+
+    <title>Portal</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="stylesheets/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="stylesheets/jumbotron.css" rel="stylesheet">
+    <!-- Just for debugging purposes. Don't actually copy these 2 lines! -->
+    <!--[if lt IE 9]><script src="javascripts/ie8-responsive-file-warning.js"></script><![endif]-->
+    <script src="javascripts/ie-emulation-modes-warning.js"></script>
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+    <script src="http://cdn.bootcss.com/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="http://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+    <link href="stylesheets/showLoading.css" rel="stylesheet" type="text/css" />
+    <script type="text/javascript" src="javascripts/jquery.showLoading.min.js"></script>
+    <![endif]-->
+</head>
+<body>
+
+<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation" style="background-color: #FF6600">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#">Subscriber Portal</a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+            <form class="navbar-form navbar-right" role="form">
+                <div class="form-group">
+                    <input type="text" placeholder="Email" class="form-control">
+                </div>
+                <div class="form-group">
+                    <input type="password" placeholder="Password" class="form-control">
+                </div>
+                <button type="submit" class="btn btn-success">Sign in</button>
+            </form>
+        </div><!--/.navbar-collapse -->
+    </div>
+</nav>
+<!-- Main jumbotron for a primary marketing message or call to action -->
+<div class="jumbotron" style="background-image: url(images/background.jpg);" id="add_test_img">
+    <div class="container">
+        <h1>Welcome!</h1>
+        <h3 id="subscriber_name"></h3>
+        <h3 id="subscriber_service_package"></h3>
+        <p>
+            <div class="col-sm-2">
+                <select class="form-control" id="inputServicePackage" name="inputServicePackage">
+                    <option  value="qos2m">qos4m</option>
+                    <option  value="qos4m">qos8m</option>
+                    <option  value="qos6m">qos12m</option>
+                    <option  value="qos8m">qos20m</option>
+                </select>
+            </div>
+        </p>
+        <p><a id="change_service_package" name="change_service_package" class="btn btn-primary" role="button">Buy now »</a></p>
+    </div>
+</div>
+
+<div class="container">
+    <!-- Example row of columns -->
+    <div class="row">
+        <div class="col-md-4">
+            <img src="images/213020-tile-3up-samsung-phones-324x170.png" height="100%" width="100%"/>
+            <h4>WIRELESS</h4>
+            <p>Purchase Samsung
+                Smartphones with
+                AT&T Next℠ for $0 down!* </p>
+            <p><a class="btn btn-primary" href="#" role="button">View details »</a></p>
+        </div>
+        <div class="col-md-4">
+            <img src="images/212480-tile-home-check-order-status-couple-324x170.png" height="100%" width="100%"/>
+            <h4>CHECK ON MY ORDER</h4>
+            <p>Manage your orders in one convenient place. Review details, track shipments, and chat with a live support agent.</p>
+            <p><a class="btn btn-primary" href="#" role="button">View details »</a></p>
+        </div>
+        <div class="col-md-4">
+            <img src="images/181774-3slot-MobileShareValuePlans-324x170.png" height="100%" width="100%"/>
+            <h4>IT'S NOT COMPLICATED</h4>
+            <p>Share data, plus get unlimited Talk & Text for your phones on one plan.</p>
+            <p><a class="btn btn-primary" href="#" role="button">View details »</a></p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-4">
+            <img src="images/204442-tile-homepage-jdpower-324x170.png" height="100%" width="100%"/>
+            <h4>J.D. POWER</h4>
+            <p>"Highest Satisfaction with the Purchase Experience among Full Service Wireless Providers, Three Times in a Row"</p>
+            <p><a class="btn btn-primary" href="#" role="button">View details »</a></p>
+        </div>
+        <div class="col-md-4">
+            <img src="images/215414-BYOP_Home-3UP-holiday_324x170.png" height="100%" width="100%"/>
+            <h4>SAVE UP TO $300 PER YEAR WHEN YOU BRING YOUR OWN SMARTPHONE</h4>
+            <p>Switch or add a line and save with Mobile Share Value℠ plan.</p>
+            <p><a class="btn btn-primary" href="#" role="button">View details »</a></p>
+        </div>
+        <div class="col-md-4">
+            <img src="images/197717-tile-homepage-digitallife-324x170.png" height="100%" width="100%"/>
+            <h4>AT&T DIGITAL LIFE SAVINGS</h4>
+            <p>Limited Time Only: Smart Security equipment offer with the purchase of Smart Security plus Automation Package.</p>
+            <p><a class="btn btn-primary" href="#" role="button">View details »</a></p>
+        </div>
+    </div>
+    <hr>
+    <footer>
+        <center><p>© Company 2015</p></center>
+    </footer>
+</div> <!-- /container -->
+
+
+<!-- Bootstrap core JavaScript
+================================================== -->
+<!-- Placed at the end of the document so the pages load faster -->
+<script src="javascripts/jquery-2.0.0.min.js"></script>
+<script src="javascripts/bootstrap.min.js"></script>
+<!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+<script src="javascripts/ie10-viewport-bug-workaround.js"></script>
+<script>
+    var global_subscriber = {
+        "message": "not found",
+        "user": "unknown",
+        "ip": "unknown",
+        "meal": "unknown"
+    };
+    $(window).load(function(){
+        $.ajax({
+            url:"/query_subscriber",
+            type:"get",
+            beforeSend:function(XMLHttpRequest){
+            },
+            success:function(subscriber){
+                if(subscriber.message==="success"){
+                    global_subscriber = subscriber;
+                    $("h3#subscriber_name").html("name:<label>"+subscriber.user+"</label>");
+                    $("h3#subscriber_service_package").html("service package:<label>"+subscriber.meal+"</label>");
+                }else{
+                    $("h3#subscriber_name").html("name:<label>unknown1</label>");
+                    $("h3#subscriber_service_package").html("service package:<label>unknown1</label>");
+                }
+            },
+            error:function(err){
+                $("h3#subscriber_name").html("name:<label>unknown1</label>");
+                $("h3#subscriber_service_package").html("service package:<label>unknown1</label>");
+            }
+        });
+    });
+    $("a#change_service_package").click(function(){
+        $(".add_test_img").showLoading();
+        var ServicePackage = $("#inputServicePackage option:selected").val();
+        $.ajax({
+            url:"/modify_subscriber",
+            type:"post",
+            data:{
+                user:global_subscriber.user,
+                meal:ServicePackage
+            },
+            beforeSend:function(XMLHttpRequest){
+            },
+            success:function(result){
+                $(".add_test_img").hideLoading();
+                if(result.message=="success"){
+                    alert("[success]update service package");
+                    $("h3#subscriber_service_package").html("service package:"+ServicePackage);
+                }else{
+                    alert("[fail]update service package");
+                }
+
+            },
+            error:function(err){
+                $(".add_test_img").hideLoading();
+                alert("[error]"+JSON.stringify(err));
+            }
+        });
+    });
+</script>
+</body></html>

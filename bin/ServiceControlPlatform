@@ -1,0 +1,26 @@
+#!/usr/bin/env node
+/*
+ * Copyright (c) 2015 ChinaTelecom GuangZhou Institute. and others.  All rights reserved.
+ *
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v1.0 which accompanies this distribution,
+ * and is available at http://www.eclipse.org/legal/epl-v10.html
+ */
+var debug = require('debug')('my-application');
+var systemcfg = require('./../models/db/system_cfg.js');
+var app = require('../app');
+app.set('port', process.env.PORT || 3001);
+/*
+app start
+1.read config
+2.start http server
+ */
+systemcfg.init_system(function(err,redir){
+    if(err==null){
+        var server = app.listen(app.get('port'), function() {
+            debug('Express server listening on port ' + server.address().port);
+        });
+    }else{
+        console.log("[system error]"+err);
+    }
+});

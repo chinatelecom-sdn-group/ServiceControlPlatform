@@ -1,0 +1,135 @@
+<div class="table-responsive">
+    <table id="tabletest" class="table table-striped table-hover table-condensed">
+        <thead>
+        <tr>
+            <th><input id="id_check_all_select" name="id_check_all_select" type="checkbox"></th>
+            <% for(var i = 0; i < content.table_head.length; i++) { %>
+            <th> <%= content.table_head[i] %> </th>
+            <% } %>
+        </tr>
+        </thead>
+        <tbody>
+        <% for(var i = 0; i < List.length; i++) { %>
+        <tr>
+            <td><input type="checkbox" name="<%= check_box %>" value="<%= JSON.stringify(List[i]) %>"></td>
+            <% for(var j = 0; j < content.table_items.length; j++){
+                var hide_content = false;
+                var td_content = "";
+                if (List[i][content.table_items[j]] == null)
+                    continue;
+                if (typeof List[i][content.table_items[j]] == "string"
+                        || typeof List[i][content.table_items[j]] == "number") {
+                    td_content = List[i][content.table_items[j]].toString();
+                }
+                else {
+                    for (var k = 0; k < List[i][content.table_items[j]].length; k++) {
+                        //td_content += "<a href=''>";
+                        td_content += List[i][content.table_items[j]][k].Name;
+                        //td_content += "</a>";
+                        if (k + 1 != List[i][content.table_items[j]].length) {
+                            td_content += ",";
+                        }
+                    }
+                }
+                if (typeof List[i][content.table_items[j]] == "object") {
+                    td_content = JSON.stringify(List[i][content.table_items[j]]);
+                }
+            %>
+            <% if(td_content.length < 20){ %>
+            <td> <%= td_content %> </td>
+            <% }else{ %>
+            <% hide_content = true; %>
+            <td id="id_td_content" name="id_td_content" data-toggle="tooltip" currentrow="<%= i %>"
+                title="<%= "<b>" + content.table_head[j] + "</b><br>" + td_content %>">
+                <%= td_content.substr(0, 20) + "..." %>
+            </td>
+            <% } %>
+            <% } %>
+            <% if(hide_content == true){ %>
+        <tr id="<%= "trdetail" + i %>" style="display: none">
+            <td style="word-break: break-all" colspan="<%= content.table_items.length + 1 %>"
+            </td>
+        </tr>
+        <% } %>
+        </tr>
+        <% } %>
+        </tbody>
+        <tfoot>
+        <tr>
+            <th colspan="12">
+                <center>
+                    <ul class="pagination" id="page2" pageCount="<%= page.pageCount %>" pageNum="<%= page.num %>"
+                        pageSize="<%= page.size %>" pageLimit="<%= page.limit %>" numberOfPages="<%= page.numberOf %>">
+                    </ul>
+                </center>
+            </th>
+        </tr>
+        </tfoot>
+    </table>
+    <input id="page_url" name="page_url" type="text" style="display: none" value="<%= content.page_url %>">
+</div>
+<script LANGUAGE="JavaScript">
+    $("td#id_td_content").click(function () {
+        var cur_row = $(this).attr("currentrow");
+        $("tr#trdetail" + cur_row).toggle();
+    });
+    $("#id_check_all_select").click(function () {
+        var b = $(this).prop("checked");
+        $("[name='<%= check_box %>']").prop("checked", b);
+    });
+    $("button#id_search_select").click(function () {
+        var fathercontent = "";
+        console.log($("input#fathercontent").val())
+        fathercontent = "#" + $("input#fathercontent").val();
+        if (fathercontent == "" || fathercontent == "#undefined") {
+            fathercontent = "#modal-container-select-dlg";
+        }
+        var querydata = document.getElementById("id_search_select").value;
+        $.ajax({
+            type: "get",
+            url: $("input#page_url").val() + "/get_content?p=-1" + "&querydata=" + querydata,
+            success: function (msg) {
+                $(fathercontent + "-content").html(msg);
+                $(fathercontent).modal('show');
+            },
+            error: function (err) {
+                alert(err);
+            }
+        });
+    });
+    $("document").ready(function () {
+        //分页功能
+        var page = $('#page2');
+        var fathercontent = "";
+        fathercontent = "#" + $("input#fathercontent").val();
+        if (fathercontent == "" || fathercontent == "#undefined") {
+            fathercontent = "#modal-container-select-dlg";
+        }
+        if ($.getUrlVar("querydata")) {
+            document.getElementById("id_search_select").value = $.getUrlVar("querydata");
+        }
+        var querydata = document.getElementById("id_search_select").value;
+        //如果没有数据，则不需要调用bootstrapPaginator
+        <%if(List.length>0){%>
+        var options = {
+            bootstrapMajorVersion: 3,
+            currentPage: page.attr('pageNum'),
+            totalPages: page.attr('pageCount'),
+            numberOfPages: page.attr('numberOfPages'),
+            onPageClicked: function (event, originalEvent, type, page) {
+                $.ajax({
+                    type: "get",
+                    url: $("input#page_url").val() + "/get_content?p=" + page + "&querydata=" + querydata,
+                    success: function (msg) {
+                        if (msg) {
+                            $(fathercontent + "-content").html(msg);
+                            $(fathercontent).modal('show');
+                        }
+                    }
+                });
+            }
+        };
+        $('#page2').bootstrapPaginator(options);
+        <%}%>
+    });
+</script>

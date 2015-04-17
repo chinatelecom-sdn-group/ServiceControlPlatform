@@ -1,0 +1,76 @@
+<div class="modal fade" id="modal-container-delete" role="dialog" aria-labelledby="myModalLabel-delete" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form class="form-horizontal">
+                <fieldset>
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                        <h4 class="modal-title" id="id_modify_dlg">
+                            <%= content.dlg_delete_title %>
+                        </h4>
+                    </div>
+                    <div class="modal-body">
+                        <div id="id_labels">
+
+                        </div>
+                        <input  id="id_delete_dlg_obj"  name="id_delete_dlg_obj" type="text" class="hide"/>
+                    </div>
+                    <div class="modal-footer form-actions">
+                        <button type="button" class="btn btn-default" data-dismiss="modal"><%= nav_head.btn_close %></button>
+                        <button type="button" class="btn btn-primary" data-dismiss="modal" id="id_del_confirm"><%= nav_head.btn_confirm %></button>
+                    </div>
+                </fieldset>
+            </form>
+        </div>
+    </div>
+</div>
+<script  LANGUAGE="JavaScript">
+    $("a#id_btn_delete_obj").click(function(){
+        var html_str = "";
+        var input_str =  $(this).attr('detail');
+        var array;
+        if (input_str.indexOf(",") > 0) {
+            array = input_str.split(",");
+        }
+        else {
+            array = new Array(input_str);
+        }
+        for(var i=0; i<array.length; i++){
+            html_str+="<label class='control-label'>"+array[i]+"</label><br/>";
+        }
+        $("div#id_labels").html(html_str);
+        $("input#id_delete_dlg_obj").val(input_str);
+        $("div#modal-container-delete").modal("show");
+    });
+    $("a#id_delete_user_all").click(function(){
+        var html_str = "";
+        var input_str = "";
+        $("[name='checkbox_user']").each(function(){
+            if($(this).prop("checked")){
+                html_str+="<label class='control-label'>"+$(this).val()+"</label><br/>";
+                input_str += $(this).val() + ",";
+            }
+        });
+        if(input_str.length>0){
+            input_str =  input_str.substring(0,input_str.length-1)
+        }
+        $("div#id_labels").html(html_str);
+        $("input#id_delete_dlg_obj").val(input_str);
+        $("div#modal-container-delete").modal("show");
+    });
+    $("button#id_del_confirm").click(function(){
+        var data = $("#id_delete_dlg_obj").val();
+        $.ajax({
+            type: "delete",
+            url: "<%= content.page_url %>",
+            data:{id:data},
+            success: function (msg) {
+                $("#modal-container-info-dlg-content").html(msg);
+                $("#modal-container-info-dlg").modal('show');
+            },
+            error: function (XMLHttpRequest) {
+                alert("error");
+            }
+        });
+    });
+</script>

@@ -1,0 +1,135 @@
+<ul id="myTab" class="nav nav-tabs">
+    <li>
+        <a>
+            <span class="label label-primary" id="host_name"><%=switch_info.Name%></span>
+        </a>
+    </li>
+    <li class="active">
+        <a href="#step1" data-toggle="tab">
+            Runtime
+        </a>
+    </li>
+    <li>
+        <a href="#step2" data-toggle="tab">
+            History
+        </a>
+    </li>
+    <li>
+        <a href="#step3" data-toggle="tab">
+            FlowEntry
+        </a>
+    </li>
+</ul>
+<div id="myTabContent" class="tab-content">
+    <input id="fathercontent" name="fathercontent" type="text" style="display: none" value="">
+    <div class="tab-pane fade in active" id="step1">
+        <div class="form-group">
+            <div class="panel panel-gsta-sm panel-default" style="margin: 10px;">
+                <div class="panel-body">
+                    <div class="row placeholders table-responsive">
+						<table class="table table-striped table-hover table-condensed">
+							<thead>
+							<tr>
+								<th><center>Port</center></th>
+								<th><center>Index</center></th>
+								<th><center>Mac</center></th>
+								<th><center>BrName</center></th>
+							</tr>
+							</thead>
+							<tbody>
+							<% for(var i=0; i<switch_info.Port.length; i++) { %>
+							<tr>
+								<td ><a href="javascript:select_and_show('port','<%= switch_info.Port[i].Name %>','<%=sw%>')"><%= switch_info.Port[i].Name %></a></td>
+								<td ><%= switch_info.Port[i].Port %></td>
+								<td ><%= switch_info.Port[i].Mac %></td>
+								<td ><%= switch_info.Port[i].BrName %></td>
+							</tr>
+							<% } %>
+							</tbody>
+						</table>
+					</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="tab-pane fade" id="step2">
+        <div class="form-group">
+            <!--历史信息-->
+            <div class="panel panel-gsta-sm panel-default" style="margin: 10px;">
+                <div class="panel-body">
+                    <%include query_frame.ejs%>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="tab-pane fade" id="step3">
+        <div class="form-group">
+            <!--流表信息-->
+            <div class="panel panel-gsta-sm panel-default" style="margin: 10px;">
+                <div class="panel-body">
+                    <!-- tabs right -->
+                    <div class="tabbable tabs-top">
+                        <ul class="nav nav-tabs">
+                            <%for(var i=0; i<flow_info.length; i++){%>
+                                <%if(i==0){%>
+                                <li class="active"><a href="#<%=i+1%>" data-toggle="tab"><%=flow_info[i].name%></a></li>
+                                <%}else{%>
+                                <li><a href="#<%=i+1%>" data-toggle="tab"><%=flow_info[i].name%></a></li>
+                                <%}%>
+                            <%}%>
+                        </ul>
+                        <div class="tab-content">
+                            <%for(var i=0; i<flow_info.length; i++){%>
+                            <%
+                                var div_class = "tab-pane";
+                                if(i==0){
+                                    div_class = "tab-pane active"
+                                }
+                            %>
+                            <div class="<%=div_class%>" id="<%=i+1%>">
+                                <table class="table tree" style="margin-top: 10px">
+                                    <tr class="treegrid-1">
+                                        <td>table info</td><td></td>
+                                    </tr>
+                                    <tr class="treegrid-parent-1">
+                                        <td>name</td><td><%=flow_info[i].name%></td>
+                                    </tr>
+                                    <tr class="treegrid-parent-1">
+                                        <td>type</td><td><%=flow_info[i].type%></td>
+                                    </tr>
+                                    <tr class="treegrid-parent-1">
+                                        <td>size</td><td><%=flow_info[i].size%></td>
+                                    </tr>
+                                    <tr class="treegrid-2">
+                                        <td>flow info</td><td></td>
+                                    </tr>
+                                    <%for(var j=0; j<flow_info[i].flow.length; j++){%>
+                                    <tr class="treegrid-parent-2">
+                                        <td><%=flow_info[i].flow[j].key%></td>
+                                        <td>
+                                        <%for(var k=0; k<flow_info[i].flow[j].actions.length; k++){%>
+                                        {action:<%=JSON.stringify(flow_info[i].flow[j].actions[k].name)%>
+                                        option:<%=JSON.stringify(flow_info[i].flow[j].actions[k].options)%>}
+                                        <%}%>
+                                        </td>
+                                    </tr>
+                                    <%}%>
+                                </table>
+                            </div>
+                            <%}%>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        $('.tree').treegrid({
+            expanderExpandedClass: 'glyphicon glyphicon-chevron-down',
+            expanderCollapsedClass: 'glyphicon glyphicon-chevron-right'
+        });
+    });
+</script>

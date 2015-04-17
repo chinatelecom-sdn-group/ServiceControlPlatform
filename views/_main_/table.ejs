@@ -1,0 +1,94 @@
+<div class="table-responsive">
+    <table class="table table-striped table-hover table-condensed">
+        <thead>
+        <tr>
+            <th><input id="id_check_all" name="id_check_all" type="checkbox"></th>
+            <% for(var i=0; i<content.table_head.length; i++) { %>
+            <th> <%= content.table_head[i] %> </th>
+            <% } %>
+            <%if(title!="SessionInstance"){%>
+            <th>#</th>
+            <%}%>
+        </tr>
+        </thead>
+        <tbody>
+        <% for(var i=0; i<List.length; i++) { %>
+        <tr>
+            <td ><input type="checkbox" name="checkbox_user" value="<%= List[i]._id %>"></td>
+                <% for(var j = 0; j < content.table_items.length; j++){ %>
+                    <%
+                        var hide_content = false;
+                        var td_content = "";
+                        if(List[i][content.table_items[j]]==null)
+                            continue;
+                         if(typeof List[i][content.table_items[j]]=="string"
+                                ||typeof List[i][content.table_items[j]]=="number"){
+                            td_content = List[i][content.table_items[j]].toString();
+                        }
+                        else{
+                            for(var k=0; k<List[i][content.table_items[j]].length; k++){
+                                //td_content += "<a href=''>";
+                                td_content += List[i][content.table_items[j]][k].Name;
+                                //td_content += "</a>";
+                                if(k+1!=List[i][content.table_items[j]].length){
+                                    td_content += ",";
+                                }
+                            }
+                        }
+                        if(typeof List[i][content.table_items[j]]=="object"){
+                            td_content = JSON.stringify(List[i][content.table_items[j]]);
+                        }
+                    %>
+                    <%if(td_content.length<20){%>
+                        <td> <%= td_content%> </td>
+                    <%}else{%>
+                        <%var hide_content = true;%>
+                        <td id="id_td_content" name="id_td_content" data-toggle="tooltip" currentrow="<%=i%>" title="<%= "<b>"+content.table_head[j]+"</b><br>"+td_content%>">
+                            <%= td_content.substr(0, 20) + "..." %>
+                        </td>
+                    <% }%>
+                <% } %>
+            <%if(title!="SessionInstance"){%>
+            <td>
+                <div class="btn-group">
+                    <a id="id_modify_user" detail="<%= JSON.stringify(List[i]) %>"><span class="glyphicon glyphicon-edit"></span></a>
+                    <a id="id_btn_delete_obj" detail="<%= List[i]._id %>"><i class="glyphicon glyphicon-remove"></i></a>
+                </div>
+            </td>
+            <%}%>
+            <% if(hide_content==true){ %>
+                <tr id="<%= "trdetail" + i %>" style="display: none">
+                    <td style="word-break: break-all" colspan="<%= content.table_items.length + 2 %>"></td>
+                </tr>
+            <% } %>
+        </tr>
+        <% } %>
+        </tbody>
+        <tfoot>
+        <tr>
+            <th colspan="12">
+                <center>
+                    <ul  class="pagination" id="page1" pageCount="<%=page.pageCount%>" pageNum="<%=page.num %>" pageSize="<%=page.size%>" pageLimit="<%=page.limit%>" numberOfPages="<%=page.numberOf%>">
+                    </ul>
+                </center>
+            </th>
+        </tr>
+        </tfoot>
+    </table>
+</div>
+<script  LANGUAGE="JavaScript">
+    $("document").ready(function () {
+
+    });
+    $("#id_check_all").click(function(){
+        var b = $(this).prop("checked");
+        $("[name='checkbox_user']").prop("checked",b);
+    });
+    $("td#id_td_content").click(function(){
+        var cur_row = $(this).attr("currentrow");
+        var detail = $(this).attr("title");
+        $("tr#trdetail" + cur_row).children().html(detail);
+        $("tr#trdetail" + cur_row).toggle();
+    });
+</script>
+<% include table_del_dlg.ejs%>

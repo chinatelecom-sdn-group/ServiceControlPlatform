@@ -1,0 +1,244 @@
+<div class="modal fade" id="modal-container-858025" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"  style="overflow:auto;">
+    <div class="modal-dialog"   style="width: 50%;margin-top: 5%">
+        <div class="modal-content">
+            <form class="form-horizontal">
+                <fieldset>
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                        <h4 class="modal-title" id="myModalLabel-add" name="myModalLabel-add">
+                            <%= content.dlg_add_title %>
+                        </h4>
+                        <h4 class="modal-title" id="myModalLabel-modify" name="myModalLabel-modify">
+                            <%= content.dlg_modify_title %>
+                        </h4>
+                    </div>
+                    <div class="modal-body" style="height: 480px;overflow: auto">
+                        <div class="form-group" id="id_div_policy_id" name="id_div_policy_id">
+                            <label for="inputPolicyName" class="col-sm-3 control-label"><%= content.PolicyID %></label>
+                            <div class="col-sm-9">
+                                <input type="text" class="form-control" id="inputPolicyID" name="inputPolicyID" readOnly="true"/>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="inputPolicyName" class="col-sm-3 control-label"><%= content.PolicyName %></label>
+                            <div class="col-sm-9">
+                                <input type="text" class="form-control" id="inputPolicyName" name="inputPolicyName" />
+                                <span class=help-block">format:function-operation-name</span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="inputPriority" class="col-sm-3 control-label"><%= content.Priority %></label>
+                            <div class="col-sm-9">
+                                <input type="text" class="form-control" id="inputPriority" name="inputPriority" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="inputPolicyType" class="col-sm-3 control-label"><%= content.PolicyType %></label>
+                            <div class="col-sm-9">
+                                <select class="form-control" id="inputPolicyType" name="inputPolicyType">
+                                    <option  value="ServiceChain">Service Chain</option>
+                                    <option  value="BasicForwarding">Basic Forwarding</option>
+                                    <option  value="HeadForwarding">Head Forwarding</option>
+                                    <option  value="DNSRedirect">DNS Redirect</option>
+                                    <option  value="PFPathManual">PF Path manual</option>
+                                    <option  value="PFPathAuto">PF Path auto</option>
+                                    <option  value="PFTemplate">PF Template</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div id="policy_content">
+                            <!--to be show-->
+                        </div>
+                        <!--to be hide-->
+                        <div id="BasicForwarding" name="BasicForwarding" style="display: none">
+                            <%include policy_config_add_dlg_basic_forwarding.ejs %>
+                        </div>
+                        <div id="HeadForwarding" name="HeadForwarding" style="display: none">
+                            <%include policy_config_add_dlg_head_forwarding.ejs %>
+                        </div>
+                        <div id="DNSRedirect" name="DNSRedirect" style="display: none">
+                            <%include policy_config_add_dlg_dns_redirect.ejs %>
+                        </div>
+                        <div id="ServiceChain" name="ServiceChain" style="display: none">
+                            <%include policy_config_add_dlg_service_chain.ejs %>
+                       </div>
+                        <div id="PFPathManual" name="PFPathManual" style="display: none">
+                            <%include policy_config_add_dlg_pf_path_manual.ejs %>
+                        </div>
+                        <div id="PFPathAuto" name="PFPathAuto" style="display: none">
+                            <%include policy_config_add_dlg_pf_path_auto.ejs %>
+                        </div>
+                        <div id="PFTemplate" name="PFTemplate" style="display: none">
+                            <%include policy_config_add_dlg_pf_template.ejs %>
+                        </div>
+                        <!--to be hide-->
+                    </div>
+                    <div class="modal-footer form-actions">
+                        <button type="button" class="btn btn-default" data-dismiss="modal"><%= nav_head.btn_close %></button>
+                        <button type="button" class="btn btn-primary" id="id_btn_add_policy" name="id_btn_add_policy">
+                            <%= nav_head.btn_save %>
+                        </button>
+                        <button type="button" class="btn btn-primary" id="id_btn_modify_policy" name="id_btn_modify_policy">
+                            <%= nav_head.btn_save %>
+                        </button>
+                    </div>
+                </fieldset>
+            </form>
+        </div>
+    </div>
+</div>
+<script>
+    var policy_content_name = null;//标识当前显示的页面
+    var policy_content_func = null;//标识当前使用的产生policy content的函数
+    $("document").ready(function(){
+        $("h4#myModalLabel-modify").hide();
+        $("div#id_div_policy_id").hide();
+        //默认基础发送策略
+        policy_content_name = "ServiceChain";
+        policy_content_func = service_chain_policy_content;//函数赋值
+        $("div#"+policy_content_name).show();
+    });
+    $("#id_btn_add").click(function(){
+        $("#modal-container-select-dlg").modal('show');
+    });
+    $("select#inputPolicyType").change(function(){
+        //切换policy的div
+        if($(this).val()=="ServiceChain"){
+            policy_content_func = service_chain_policy_content;//函数赋值
+        }else if($(this).val()=="BasicForwarding"){
+            policy_content_func = basic_forwarding_policy_content;//函数赋值
+        }else if($(this).val()=="HeadForwarding"){
+            policy_content_func = head_forwarding_policy_content;//函数赋值
+        }else if($(this).val()=="DNSRedirect"){
+            policy_content_func = dns_redirect_policy_content;//函数赋值
+        }else if($(this).val()=="PFPathManual"||$(this).val()=="PFPhysicsPath"){
+            policy_content_func = pf_path_manual_policy_content;//函数赋值
+        }else if($(this).val()=="PFPathAuto"){
+            policy_content_func = pf_path_auto_policy_content;//函数赋值
+        }else {
+            policy_content_func = pf_template_policy_content;//函数赋值
+        }
+        $("div#"+policy_content_name).hide();
+        policy_content_name = $(this).val();//切换完毕
+        $("div#"+policy_content_name).show();
+    });
+    $("button#id_btn_add_policy").click(function(){
+        func_ajax("post");
+    });
+    $("button#id_btn_modify_policy").click(function(){
+        func_ajax("put");
+    });
+    function func_ajax(type){
+        var PolicyEntryID = $("#inputPolicyID").val();
+        var PolicyEntryName = $("#inputPolicyName").val();
+        var PolicyType = $("#inputPolicyType option:selected").val();
+        var PolicyPriority = $("#inputPriority").val();
+        var PolicyContent = policy_content_func();//调用生成content
+        if(typeof PolicyContent=="object"){
+            $("#modal-container-error-dlg-content").html(PolicyContent.error);
+            $("#modal-container-error-dlg").modal('show');
+            return;
+        }
+        $("#modal-container-858025").modal('hide');
+        $.ajax({
+            type:type,
+            url:"/policy_config",
+            data:
+            {
+                id:PolicyEntryID,
+                Name:PolicyEntryName,
+                Priority:PolicyPriority,
+                Type:PolicyType,
+                Content:PolicyContent
+            },
+            beforeSend:function(XMLHttpRequest){
+
+            },
+            success:function(msg){
+                $("#modal-container-info-dlg-content").html(msg);
+                $("#modal-container-info-dlg").modal('show');
+            },
+            error:function(err){
+                // $("#id-loading-dlg").modal('hide');
+                $("#modal-container-info-dlg-content").html(err);
+                $("#modal-container-info-dlg").modal('show');
+            }
+        });
+    }
+
+    function show_add_dlg(){
+        //设置值
+        $("input#inputPolicyID").attr("value","");
+        $("input#inputPolicyName").attr("value","");
+        $("input#inputPriority").attr("value","");
+        $("select#inputPolicyType").val("ServiceChain");
+        //设置值:base forward
+        basic_forwarding_policy_content_clear();
+        //设置值：dns redirect
+        dns_redirect_policy_content_clear();
+        //设置值:Service Chain
+        service_chain_policy_content_clear();
+        //设置 pf template
+        pf_template_policy_content_clear();
+        //设置pf phy path
+        pf_path_manual_policy_content_clear();
+        //设置pf logical path
+        pf_path_auto_policy_content_clear();
+        //设置pf head
+        head_forwarding_policy_content_clear();
+        //设置policy content
+        policy_content_func = service_chain_policy_content;//函数赋值
+        $("div#"+policy_content_name).hide();
+        policy_content_name = "ServiceChain";;//切换完毕
+        $("div#"+policy_content_name).show();
+        //设置控件
+        $("h4#myModalLabel-modify").hide();
+        $("div#id_div_policy_id").hide();
+        $("button#id_btn_modify_policy").hide();
+        $("button#id_btn_add_policy").show();
+        $("h4#myModalLabel-add").show();
+    }
+
+    function show_modify_dlg(detail){
+        //设置值
+        var encoded = eval("("+detail+")");
+        $("input#inputPolicyID").attr("value",encoded._id);
+        $("input#inputPolicyName").attr("value",encoded.Name);
+        $("input#inputPriority").attr("value",encoded.Priority);
+        $("select#inputPolicyType").val(encoded.Type);
+        if(encoded.Type=="ServiceChain"){
+            service_chain_policy_content_modify(encoded.Content);
+            policy_content_func = service_chain_policy_content;
+        }else if(encoded.Type=="BasicForwarding"){
+            basic_forwarding_policy_content_modify(encoded.Content);
+            policy_content_func = basic_forwarding_policy_content;
+        }else if(encoded.Type=="DNSRedirect"){
+            dns_redirect_policy_content_modify(encoded.Content);
+            policy_content_func = dns_redirect_policy_content;
+        }else if(encoded.Type=="HeadForwarding"){
+            head_forwarding_policy_content_modify(encoded.Content);
+            policy_content_func = head_forwarding_policy_content;
+        }else if(encoded.Type=="PFPathManual"||encoded.Type=="PFPhysicsPath"){
+            $("select#inputPolicyType").val("PFPathManual");
+            pf_path_manual_policy_content_modify(encoded.Content);
+            policy_content_func = pf_path_manual_policy_content;
+        }else if(encoded.Type=="PFPathAuto"){
+            pf_path_auto_policy_content_modify(encoded.Content);
+            policy_content_func = pf_path_auto_policy_content;
+        }else{
+            pf_template_policy_content_modify(encoded.Content);
+            policy_content_func = pf_template_policy_content;
+        }
+        //设置policy content
+        $("div#"+policy_content_name).hide();
+        policy_content_name = encoded.Type;//切换完毕
+        $("div#"+policy_content_name).show();
+        //设置控件
+        $("h4#myModalLabel-add").hide();
+        $("button#id_btn_add_policy").hide();
+        $("h4#myModalLabel-modify").show();
+        $("button#id_btn_modify_policy").show();
+        $("div#id_div_policy_id").show();
+        $("#modal-container-858025").modal('show');
+    }
+</script>

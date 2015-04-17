@@ -1,0 +1,222 @@
+<% include ../_main_/head %>
+<% include ../_main_/paginator %>
+<script>
+    $("document").ready(function(){
+        $(function () { $('#collapseOne').collapse('show')});
+        $(function () { $('#collapseTwo').collapse('show')});		
+    });
+</script>
+<% include ../_main_/body_head %>
+
+<!--提示框-->
+<div class="modal fade" id="modal-container-info-dlg_0" role="dialog" aria-labelledby="modal-container-info-dlg" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h4 class="modal-title" id="id_info_dlg"><%=content.title_warnning%></h4>
+            </div>
+            <div class="modal-body">
+                <center><div id="modal-container-info-dlg-content"></div></center>
+            </div>
+            <div class="modal-footer form-actions">
+                <button type="button" class="btn btn-default" data-dismiss="modal">OK</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!--->
+
+<!--用于提示信息的一开始隐藏的信息框-->
+<div class="modal fade" id="modal-container-info-dlg" role="dialog" aria-labelledby="modal-container-info-dlg" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+				<h4 class="modal-title" id="id_info_dlg">Meal</h4>
+			</div>
+			
+			<div>
+				<br/><br/>
+                  <b>				
+					<h4 class="col-sm-6 panel-title">
+						<center><span id="user_name_field"></span> :</center>
+					</h4>
+                 <div class="col-sm-6" style="margin: -6px; padding: 0px">
+						<!--<h4 class="col-sm-4 panel-title" style="padding:7px;">
+                        User3's meal
+                     </h4>-->  
+						<div class='col-sm-5 input-group input-group-sm pull-rigth' >					  
+                        <select class="combobox form-control" id="sc_project_selector">
+                            <option value="qos2m">qos2m</option>
+								<option value="qos4m">qos4m</option>
+								<option value="qos6m">qos6m</option>
+								<option value="qos8m">qos8m</option>
+                        </select>
+                    </div>
+                  </div>
+				    </b>
+				<br/><br/>
+			</div>
+			<div class="modal-footer form-actions">
+			<center>
+				<button id="info-dlg_cancle"type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+				<button id="info-dlg_confirm" type="button" class="btn btn-primary" data-dismiss="modal"/>Confirm</button>
+			</center>
+			</div>
+		</div>
+	</div>
+</div>
+<!---->
+<script>
+	
+	function get_origin_value(field_name)
+	{
+		for(var i=0;i<origin_variables.length;i++)
+		{
+			if(origin_variables[i].name==field_name)
+			{
+				return origin_variables[i].value;
+			}	
+		}
+		return null;
+	} 
+	
+	function submit_data()
+	{
+	    var outcome=[];
+		var inputs=$("input");
+		for(var i=0;i<inputs.length;i++)
+		{
+		    obj=inputs[i];
+			if(obj.type=="text")
+			{
+				if(get_origin_value(obj.id)!=obj.value)//有更改的变化
+				{					
+					outcome.push({"name":obj.id,"value":obj.value});
+				}
+			}
+		}
+		
+		if(!outcome.length)//禁止空提交
+		{
+			return;
+		}
+		console.log(outcome);
+			
+		$.ajax({
+			type:"get",
+			url:"/monitor_set_variables?",
+			data:{"vars":outcome},
+			success:function(msg){
+			    //console.log(msg);
+				//alert(msg.message);
+			    window.location.reload();
+			},
+			error:function(err){
+				alert(err);
+			}
+			});
+	}
+	
+	
+	function check_changed(obj)
+	{
+	    if(get_origin_value(obj.id)!=obj.value)
+		    obj.style.background="#D5F2FF";
+		else
+		    obj.style.background="#FFFFFF";
+	}
+	
+	
+	var origin_variables=<%- JSON.stringify(result) %>;
+	
+	
+</script>
+
+<% function get_value(field_name)
+{for(var i=0;i<result.length;i++)
+{
+    if(result[i].name==field_name)
+	{
+	//console.log(result[i]);
+    //console.log(result[i].value);
+	return result[i].value;
+	}	
+}
+return "null";
+} 
+%>
+
+<div class="form-horizontal">
+    <div class="panel panel-default">
+        <div class="panel-body" id="input_group">
+           <div class="form-group"><label for="disabledTextInput" class="col-sm-2 control-label">host_sequence</label><div class="col-sm-8">
+                  <input type="text" id="host_sequence" class="form-control" placeholder="Waiting for Input..." value="<%= get_value("host_sequence") %>" oninput="check_changed(this);"/>
+           </div></div>
+		   <br/>
+			<div class="form-group"><label for="disabledTextInput" class="col-sm-2 control-label">bras_addr</label><div class="col-sm-8">
+                   <input type="text" id="bras_addr" class="form-control" placeholder="Waiting for Input..." value="<%= get_value("bras_addr") %>" oninput="check_changed(this);"/>
+          </div></div>
+		   <div class="form-group"><label for="disabledTextInput" class="col-sm-2 control-label">bras_user</label><div class="col-sm-8">
+                   <input type="text" id="bras_user" class="form-control" placeholder="Waiting for Input..." value="<%= get_value("bras_user") %>" oninput="check_changed(this);"/>
+           </div></div>
+		   <div class="form-group"><label for="disabledTextInput" class="col-sm-2 control-label">bras_pw</label><div class="col-sm-8">
+                   <input type="text" id="bras_pw" class="form-control" placeholder="Waiting for Input..." value="<%= get_value("bras_pw") %>" oninput="check_changed(this);"/>
+           </div></div>
+			<br/>
+			<div class="form-group"><label for="disabledTextInput" class="col-sm-2 control-label">radius_addr</label><div class="col-sm-8">
+                   <input type="text" id="radius_addr" class="form-control" placeholder="Waiting for Input..." value="<%= get_value("radius_addr") %>" oninput="check_changed(this);"/>
+          </div></div>
+		   <div class="form-group"><label for="disabledTextInput" class="col-sm-2 control-label">radius_pw</label><div class="col-sm-8">
+                   <input type="text" id="radius_pw" class="form-control" placeholder="Waiting for Input..." value="<%= get_value("radius_pw") %>" oninput="check_changed(this);"/>
+           </div></div>
+		   <div class="form-group"><label for="disabledTextInput" class="col-sm-2 control-label">radius_key</label><div class="col-sm-8">
+                   <input type="text" id="radius_key" class="form-control" placeholder="Waiting for Input..." value="<%= get_value("radius_key") %>" oninput="check_changed(this);"/>
+           </div></div>
+		   <br/>
+		   <div class="form-group"><label for="disabledTextInput" class="col-sm-2 control-label">unlogin_visit_key</label><div class="col-sm-8">
+                   <input type="text" id="unlogin_visit_key" class="form-control" placeholder="Waiting for Input..." value="<%= get_value("unlogin_visit_key") %>" oninput="check_changed(this);"/>
+           </div></div>
+        </div>
+        <div class="panel-footer">
+            <div class="form-group">
+                <div class="col-sm-offset-2 col-sm-10">
+                    <button  class="btn btn-primary" id="submit_button" onclick="submit_data();"><%= content.title_save%></button>
+					  <button  class="btn btn-default" id="reset_button" onclick="window.location.reload();"><%= content.title_reset%></button>
+                </div>
+            </div>
+        </div>
+      </div>
+</div>
+
+
+<!--<div class="form-group" id="input_group">
+
+	<label for="disabledTextInput">host_sequence</label><input type="text" id="host_sequence" class="form-control" placeholder="Waiting for Input..." value="<%- get_value("host_sequence") %>"/>
+	<br/>
+	<label for="disabledTextInput">bras_addr</label><input type="text" id="bras_addr" class="form-control" placeholder="Waiting for Input..." value="<%= get_value("bras_addr") %>"/>
+	<label for="disabledTextInput">bras_user</label><input type="text" id="bras_user" class="form-control" placeholder="Waiting for Input..." value="<%= get_value("bras_user") %>"/>
+	<label for="disabledTextInput">bras_pw</label><input type="text" id="bras_pw" class="form-control" placeholder="Waiting for Input..." value="<%= get_value("bras_pw") %>"/>
+	<br/>
+	<label for="disabledTextInput">radius_addr</label><input type="text" id="radius_addr" class="form-control" placeholder="Waiting for Input..." value="<%= get_value("radius_addr") %>"/>
+	<label for="disabledTextInput">radius_pw</label><input type="text" id="radius_pw" class="form-control" placeholder="Waiting for Input..." value="<%= get_value("radius_pw") %>"/>
+	<label for="disabledTextInput">radius_key</label><input type="text" id="radius_key" class="form-control" placeholder="Waiting for Input..." value="<%= get_value("radius_key") %>"/>
+	<br/>
+</div>
+<button type="submit" class="btn btn-primary" id="submit_button" onclick="submit_data();">Save</button>
+<script>
+   window.onload=function()
+   {
+		var inputs=$("input");
+		for(var i=0;i<inputs.length;i++)
+		{
+			var obj=inputs[i];
+			obj.oninput=check_changed(obj);
+			console.log(obj);
+		}
+	}
+</script>
+-->
+<% include ../_main_/body_foot %>
+<% include ../_main_/foot %>

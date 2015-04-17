@@ -1,0 +1,147 @@
+<div class="form-group">
+    <label  class="col-sm-3 control-label"><%= content.pf_physics_chain %></label>
+    <div class="col-sm-9">
+        <div class="cover" style="border: 1px solid #D6D6D6;padding: 5px; line-height:2" id="id_div_pf_phy_path" name="id_div_pf_phy_path">
+        </div>
+    </div>
+</div>
+<script>
+    var pf_phy_path_topo = <%- data.topo %>;
+</script>
+<script>
+    function build_port_vm_map(content){
+        var port_vm_map = {};
+        if(content==null){
+            return port_vm_map;
+        }
+        var edges = content["edges"];
+        if(edges!=null){
+            for(var i=0; i<edges.length; i++){
+                var line = edges[i];
+                var key1 = line.host + ":" + line.inport.port;
+                var key2 = line.host + ":" + line.outport.port;
+                port_vm_map[key1] = line.inport.port;
+                port_vm_map[key2] = line.outport.port;
+            }
+        }
+        return port_vm_map;
+    }
+
+    function build_pf_phy_path_policy(topo_list,content){
+        var widget = "";
+        var port_vm_map = build_port_vm_map(content);//建立映射表
+        //alert(JSON.stringify(port_vm_map));
+        for(var i=0; i<topo_list.length; i++){
+            var topo = topo_list[i];
+            var port_list = build_host_port_pair(topo["switch"]);
+            widget += " <div id=\"phy_path_policy\"class=\"form-inline\" style=\"margin: 3px;border:#c9c9c9 solid thin;padding-left: 5px;\">";
+            widget += " <div id=\"host_instance\" class=\"input-group\" inport=\""+port_list.inport+"\" outport=\""+port_list.outport+"\" name=\""+topo.name+"\">";
+            widget += "<label >"+topo.name+":</label>";
+            widget += "</div>";
+            for(var j=0; j<topo.vm.length; j++){
+                var vm = topo.vm[j];
+                var port_list = build_vm_port_pair(vm);
+                widget += " <div id=\"vm_instance\" class=\"input-group\" name=\""+vm.name+"\"  inport=\""+port_list.inport+"\" outport=\""+port_list.outport+"\">";
+                widget += " <label>";
+                var key = topo.name + ":" + port_list.inport;
+                if(port_vm_map.hasOwnProperty(key)){
+                    widget += " <input type=\"checkbox\" checked=\"true\" style=\"margin-top: 5px\">"+ vm.type;
+                }else{
+                    widget += " <input type=\"checkbox\" style=\"margin-top: 5px\">"+ vm.type;
+                }
+                widget += " </label>";
+                widget += " </div>";
+            }
+            widget += " </div>";
+        }
+        return widget;
+    }
+
+    function build_host_port_pair(data_swtich){
+        var port_pair = {inport:"",outport:""};
+        if(data_swtich!=null&&data_swtich.hasOwnProperty("phy_ports")){
+            if(data_swtich.phy_ports.length==1){
+                port_pair.inport = data_swtich.phy_ports[0].port_no;
+                port_pair.outport = data_swtich.phy_ports[0].port_no;
+            }else if(data_swtich.phy_ports.length>=2){
+                if(data_swtich.phy_ports[0].name=="phyPort0"){
+                    port_pair.inport = data_swtich.phy_ports[0].port_no;
+                    port_pair.outport = data_swtich.phy_ports[1].port_no;
+                }else if(data_swtich.phy_ports[0].name=="phyPort1"){
+                    port_pair.inport = data_swtich.phy_ports[1].port_no;
+                    port_pair.outport = data_swtich.phy_ports[0].port_no;
+                }else{
+                    port_pair.inport = data_swtich.phy_ports[0].port_no;
+                    port_pair.outport = data_swtich.phy_ports[1].port_no;
+                }
+            }
+        }
+        return port_pair;
+    }
+
+    function build_vm_port_pair(vm){
+        var port_pair = {inport:"",outport:""};
+        if(vm.ovs_ports.length==1){
+            port_pair.inport = vm.ovs_ports[0].port_no;
+            port_pair.outport = vm.ovs_ports[0].port_no;
+        }else if(vm.ovs_ports.length>=2){
+            port_pair.inport = vm.ovs_ports[0].port_no;
+            port_pair.outport = vm.ovs_ports[1].port_no;
+        }
+        return port_pair;
+    }
+
+    function build_logic_port(port_no,type){
+        var port = {
+            port:port_no,
+            type:type
+        };
+        return port;
+    }
+
+    function pf_path_manual_policy_content(){
+        var content = {
+            "edges":[]
+        };
+        $("div#phy_path_policy").each(function(){
+            //build port list
+            var port_list = new Array();
+            var host_name = $(this).children("div#host_instance").attr("name");
+            var inport_no = $(this).children("div#host_instance").attr("inport");
+            port_list.push(build_logic_port(inport_no,"phy"));
+            $(this).children("div#vm_instance").each(function(){
+                //判断是否选中
+                if($(this).children().children().prop("checked")){
+                    var inport_no = $(this).attr("inport");
+                    var outport_no = $(this).attr("outport");
+                    port_list.push(build_logic_port(inport_no,"vm"));//入口
+                    port_list.push(build_logic_port(outport_no,"vm"));//出口
+                }
+            });
+            var outport_no = $(this).children("div#host_instance").attr("outport");
+            port_list.push(build_logic_port(outport_no,"phy"));
+            //build line list
+            for(var i=0; i<port_list.length; i+=2){
+                var line = {
+                    host:host_name,
+                    inport:port_list[i],
+                    outport:port_list[i+1]
+                }
+                content.edges.push(line);
+            }
+        });
+        //返回
+        return JSON.stringify(content);
+    }
+
+    function pf_path_manual_policy_content_clear(){
+        var widget = build_pf_phy_path_policy(pf_phy_path_topo,null);
+        $("div#id_div_pf_phy_path").html(widget);
+    }
+
+    function pf_path_manual_policy_content_modify(content){
+        var contentjson = eval("("+content+")");
+        var widget = build_pf_phy_path_policy(pf_phy_path_topo,contentjson);
+        $("div#id_div_pf_phy_path").html(widget);
+    }
+</script>

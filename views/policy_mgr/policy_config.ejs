@@ -1,0 +1,39 @@
+<% include ../_main_/head %>
+<% include ../_main_/paginator %>
+<% include ../_main_/body_head %>
+<% include ../_main_/control %>
+<% include ../_main_/table %>
+<% include ./policy_config_add_dlg%>
+<% include ../_main_/body_foot %>
+<script  LANGUAGE="JavaScript">
+    $("document").ready(function(){
+        //分页功能
+        var page=$('#page1');
+        if( $.getUrlVar("querydata")){
+            document.getElementById("input_search").value = $.getUrlVar("querydata");
+        }
+        var querydata = document.getElementById("input_search").value;
+        var options = {
+            bootstrapMajorVersion:3,
+            currentPage:page.attr('pageNum'),
+            totalPages:page.attr('pageCount'),
+            numberOfPages:page.attr('numberOfPages'),
+            pageUrl: function(type, page, current){
+                return "policy_config?"+composeUrlParams()+"&p="+page;
+            }
+        };
+        $('#page1').bootstrapPaginator(options);
+    });
+
+    $("a#id_btn_add_obj").click(function() {
+        show_add_dlg();
+    });
+    $("a#id_modify_user").click(function(){
+        show_modify_dlg($(this).attr('detail'));
+    });
+    $("button#id_search").click(function(){
+        var querydata = document.getElementById("input_search").value;
+        window.location = "http://127.0.0.1:3000/policy_config?p=-1"+"&querydata="+querydata;
+    });
+</script>
+<% include ../_main_/foot %>

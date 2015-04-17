@@ -1,0 +1,100 @@
+        </div><!--col-sm-10-->
+        <div id="push"></div>
+    </div><!--row-->
+    </div>
+    <div class="row">
+        <div class="footer" style="background-color: #FFF;
+         box-shadow: inset 0px -3px 1px #FFF,
+         inset -1px 1px 1px #2980B9;">
+            <div class="container">
+                <center>
+                    <table style="font-size:16px; font-weight:bolder;">
+                        <tr height="100%">
+                            <td>
+                                <table width="100%" cellspacing="0" cellpadding="0">
+                                    <tr>
+                                        <td width="100%" style="border:0px;" align="left"><font color="#0066CC">2015&nbsp;<%=nav_foot.Develop%> &nbsp;</font></td>
+                                    </tr>
+                                 </table>
+                            </td>
+                            <td>
+                                <table width="100%" cellspacing="0" cellpadding="0">
+                                    <tr  height="50%">
+                                        <td width="100%" style="border:0px;" align="left"><font color="#0066CC"><%=nav_foot.gsta%></font></td>
+                                    </tr>
+                                    <tr  height="50%">
+                                        <td width="100%" style="border:0px;" align="left"><font color="#0066CC"><%=nav_foot.intel%></font></td>
+                                    </tr>
+                                </table>
+                            </td>
+                         </tr>
+                     </table>
+                </center>
+            </div>
+        </div>
+    </div>
+    <!--公用的对话框-->
+    <div class="modal fade" id="modal-container-info-dlg" role="dialog" aria-labelledby="modal-container-info-dlg" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                    <h4 class="modal-title" id="id_info_dlg">
+                        info
+                    </h4>
+                </div>
+                <div class="modal-body">
+                    <div id="modal-container-info-dlg-content">
+                    </div>
+                </div>
+                <div class="modal-footer form-actions">
+                    <button name="info-dlg_confirm" id="info-dlg_confirm"type="button" class="btn btn-default" data-dismiss="modal"><%= nav_head.btn_confirm %></button>
+                </div>
+            </div>
+        </div>
+    </div>
+        <div class="modal fade" id="modal-container-error-dlg" role="dialog" aria-labelledby="modal-container-info-dlg" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                        <h4 class="modal-title" id="id_info_dlg" style="color: #ff0000;">
+                            error
+                        </h4>
+                    </div>
+                    <div class="modal-body">
+                        <div id="modal-container-error-dlg-content"  style="color: #ff0000;">
+                        </div>
+                    </div>
+                    <div class="modal-footer form-actions">
+                        <button type="button" class="btn btn-danger" data-dismiss="modal"><%= nav_head.btn_confirm %></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    <div class="modal fade" id="modal-container-info-dlg-nofresh" role="dialog" aria-labelledby="modal-container-info-dlg-nofresh" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                    <h4 class="modal-title" id="modal-container-info-dlg-nofresh-title">
+                        info
+                    </h4>
+                </div>
+                <div class="modal-body">
+                    <div id="modal-container-info-dlg-nofresh-content">
+                    </div>
+                </div>
+                <div class="modal-footer form-actions">
+                    <button type="button" class="btn btn-default" data-dismiss="modal"><%= nav_head.btn_confirm %></button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div><!--container-fluid-->
+<script  LANGUAGE="JavaScript">
+$("button#info-dlg_confirm").click(function(){
+    //window.location.reload();
+    location=location;
+})
+ </script>

@@ -1,0 +1,170 @@
+<% include ../_main_/head %>
+<% include ../_main_/paginator %>
+<script src="/javascripts/raphael-min.js"></script>
+<script src="/javascripts/drawing.js"></script>
+<script src="/javascripts/monitor_mgr/draw_global_view.js"></script>
+<script src="/javascripts/monitor_mgr/draw_service_chain.js"></script>
+<style type="text/css">
+    #id_physics_path_view {
+        width:100%;
+        background-color: #f5f5f5;
+        background-image: -webkit-gradient(radial, center center, 0, center center, 600, from(#FFFFFF), to(#BBBBBB));
+    }
+    #id_logical_path_view {
+        width:100%;
+        background-color: #f5f5f5;
+        background-image: -webkit-gradient(radial, center center, 0, center center, 600, from(#FFFFFF), to(#BBBBBB));
+    }
+</style>
+<script>
+    $("document").ready(function(){
+        $(function () { $('#collapseServiceChain').collapse('show')});
+        $(function () { $('#collapsePath').collapse('show')});
+        $(function () { $('#collapseStatistics').collapse('show')});
+        //触发选择工程事件
+        $("#sc_project_selector").change(function(){
+            $.ajax({
+                type:"get",
+                url:"<%=chain_list_url%>",
+                data:{
+                    name:$('#sc_project_selector option:selected').val()
+                },
+                success:function(json)
+                {
+                    //alert(JSON.stringify(json.chain_data.Line));
+                    //return;
+                    draw_global_view(json.topo_data);//画硬拓扑图
+                    draw_chain_view(json.chain_data);
+                    disable_all_event(paper);//禁止硬拓扑图的点击事件
+                    light_chain_path(json.chain_data);//画service chain的可视化图
+
+                    $.ajax({
+                        type:"get",
+                        url:"<%=chain_detail_url%>",
+                        data:{
+                            name:$('#sc_project_selector option:selected').val()
+                        },
+                        success:function(msg)
+                        {
+                            $("#id_statistics_view").html(msg);
+                        },
+                        error:function(err){
+                            //$("#modal-container-info-dlg-nofresh-content").html(err);
+                            //$("#modal-container-info-dlg-nofresh").modal('show');
+                            console.log("页面返回失败！！");
+                        }
+                    });
+                },
+                error:function(err){
+                    $("#modal-container-info-dlg-nofresh-content").html(err);
+                    $("#modal-container-info-dlg-nofresh").modal('show');
+                }
+            });
+        });
+    });
+</script>
+<% include ../_main_/body_head %>
+
+<!--用于提示信息的一开始隐藏的信息框-->
+<div class="modal fade" id="modal-container-info-dlg" role="dialog" aria-labelledby="modal-container-info-dlg" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h4 class="modal-title" id="id_info_dlg"><%=content.title_warnning%></h4>
+            </div>
+            <div class="modal-body">
+                <center><div id="modal-container-info-dlg-content"></div></center>
+            </div>
+            <div class="modal-footer form-actions">
+                <button id="info-dlg_danger"type="button" class="btn btn-default" data-dismiss="modal">OK</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!---->
+<div class="row panel-group" id="accordion">
+    <div class="panel panel-gsta-sm panel-default">
+        <div class="panel-heading">
+            <div class="row">
+                <a data-toggle="collapse" data-parent="#accordion" href="#collapseServiceChain">
+                    <h4 class="col-md-9 panel-title">
+                        <span class="glyphicon glyphicon-link"> <%=content.title_logic_chain%></span>
+                    </h4>
+                </a>
+                <div class="col-md-3" style="margin: -6px; padding: 0px">
+                
+                    <h4 class="col-md-3 panel-title" style="padding:7px;">
+                        Chain&nbsp;
+                    </h4>
+                    
+                    <div class='col-md-9 input-group input-group-sm pull-rigth' >
+                        <select class="combobox form-control" id="sc_project_selector">
+                            <option value="">-----</option>
+                            <%for(var i=0;i<results.length;i++){%><option value="<%=results[i].Name%>"><%=results[i].Name%></option><%}%>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="collapseServiceChain" class="panel-collapse collapse" style="background-color: #f5f5f5;">
+            <div class="panel-body" style="height: 200px; width: 100%;">
+                <script>
+                    $(window).load(function() {
+                        paper_chain_view=init_stage("id_logical_path_view");
+                        //enable_paper_clear_choosed_obj();
+                    });
+                </script>
+                <div id="id_logical_path_view" class="row" style="height: 100%; width: 100%;"></div>
+            </div>
+        </div>
+    </div>
+    <div class="panel panel-gsta-sm panel-default">
+
+        <div class="panel-heading">
+            <a data-toggle="collapse" data-parent="#accordion" href="#collapsePath">
+                <h4 class="panel-title">
+                    <span class="glyphicon glyphicon-picture"> <%=content.title_phy_chain%></span>
+                </h4></a>
+        </div>
+
+        <div id="collapsePath" class="panel-collapse collapse" style="background-color: #f5f5f5;">
+            <div class="panel-body panel-gsta-body" style="height: 250px; width: 100%;">
+                <script>
+                    $(window).load(function() {
+                        paper=init_stage("id_physics_path_view");
+                        enable_paper_clear_choosed_obj();
+                        AddjustView(paper,0,40,100);
+                    });
+                </script>
+                <div id="id_physics_path_view" class="row" style="height: 100%; width: 100%;"></div>
+            </div>
+        </div>
+    </div>
+    <div class="panel panel-gsta-sm panel-default">
+
+        <div class="panel-heading">
+            <a data-toggle="collapse" data-parent="#accordion" href="#collapseStatistics">
+                <h4 class="panel-title">
+                    <span class="glyphicon glyphicon-stats"> <%=content.title_detail_view%></span>
+                </h4></a>
+        </div>
+
+        <div id="collapseStatistics" class="panel-collapse collapse">
+            <div class="panel-body">
+                <div id="id_statistics_view" class="row" >
+                    <div class="panel panel-gsta-sm panel-default"  style="margin: 10px;">
+                        <div class="panel-body">
+                            <center>
+                                <img src="images/graph.png" class="img-rounded">
+                                <h4><%=content.title_info_show_detail%></h4>
+                            </center>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<% include ../_main_/body_foot %>
+<% include ../_main_/foot %>

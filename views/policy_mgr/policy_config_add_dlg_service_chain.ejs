@@ -1,0 +1,95 @@
+<div class="form-group">
+    <label  class="col-sm-3 control-label"><%= content.service_chain %></label>
+    <div class="col-sm-9">
+        <div class="cover" style="border: 1px solid #D6D6D6;padding: 5px; line-height:2" id="id_div_service_chain" name="id_div_service_chain">
+            <div class="btn-group"  id="id_div_sc_service0" name="id_div_sc_service0">
+                <a id="id_add_sc_service" name="id_add_sc_service" class="btn btn-xs" onclick="add_sc_service(0,'FW');">
+                    <span class="glyphicon glyphicon-plus-sign" style="color: #44a3e4;"></span>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    var id_div_sc_service = 0;
+    var tmp = "<div class='btn-group'  id='id_div_sc_service0' name='id_div_sc_service0'>\
+                <a id='id_add_sc_service' name='id_add_sc_service' class='btn btn-xs' onclick='add_sc_service(0,\"FW\");'>\
+                <span class='glyphicon glyphicon-plus-sign' style='color: #44a3e4;'></span>\
+                </a>\
+                </div>";
+    $("document").ready(function(){
+        id_div_sc_service = $('div#id_div_service_chain').children().length+1;
+    });
+    function add_sc_service(id,name) {
+        //var sc_service_num = $('div#id_div_service_chain').children().length;
+        var control = "";
+        control += "<div class='btn-group'  id='id_div_sc_service"+id_div_sc_service+"' name='id_div_sc_service"+id_div_sc_service+"'>";
+        control += "<button id='id_info_sc_service"+id_div_sc_service+"' name='id_info_sc_service"+id_div_sc_service+"'";
+        control += "    type='button' class='btn btn-xs btn-primary dropdown-toggle' data-toggle='dropdown' value='"+name+"'>";
+        control += "  "+name+"&nbsp;";
+        control += "  <span class='caret'></span>";
+        control += "</button>";
+        control += "<button  id='id_del_sc_service"+id_div_sc_service+"' name='id_del_sc_service"+id_div_sc_service+"'";
+        control += "   type='button' class='btn btn-xs btn-primary' onclick='del_sc_service("+id_div_sc_service+");' style='color:#f88742;'>";
+        control += "    <span class='glyphicon glyphicon-remove'></span>";
+        control += "</button>";
+        control += "<ul class='dropdown-menu' role='menu'>";
+        <%for(var service_list_index=0; service_list_index<content.service_list.length; service_list_index++){%>
+        control += "    <li>"
+        control += "        <a value=\"";
+        control += "<%=content.service_list[service_list_index]%>";
+        control += "\" onclick=\"modify_sc_service("+ id_div_sc_service +",'";
+        control += "<%=content.service_list[service_list_index]%>";
+        control += "');\">";
+        control += "<%=content.service_list[service_list_index]%>";
+        control += "</a>";
+        control += "    </li>";
+        <%}%>
+        control += "</ul>";
+        control += "      <a id=\"id_add_sc_service\" name=\"id_add_sc_service\" class=\"btn btn-xs\" onclick=\"add_sc_service("+id_div_sc_service+",'FW');\">";
+        control += "              <span class='glyphicon glyphicon-plus-sign' style='color: #44a3e4;'></span>";
+        control += "      </a>";
+        control += "  </div>";
+        $("div#id_div_sc_service"+id).after(control);
+        id_div_sc_service += 1;
+    }
+
+    function modify_sc_service(id,name) {
+        $("button#id_info_sc_service"+id).attr("value",name);
+        $("button#id_info_sc_service"+id).html(name+"&nbsp;  <span class='caret'></span>");
+    }
+
+    function del_sc_service(id) {
+        $("div#id_div_sc_service"+id).remove();
+    }
+
+    function service_chain_policy_content(){
+        var PolicyContent = new Array();
+        $('div#id_div_service_chain').children().each(function(){
+            var tmp = $(this).children().prop("value");
+            if(tmp!=null){
+                PolicyContent.push(tmp);
+            }
+        });
+        return PolicyContent;
+    }
+
+    function service_chain_policy_content_clear(){
+        $("div#id_div_service_chain").html(tmp);
+    }
+
+    function service_chain_policy_content_modify(content){
+        $("div#id_div_service_chain").html(tmp);
+        var array;
+        if(content.indexOf(",")>0){
+            array = content.split(",");
+        }
+        else{
+            array = new Array(content);
+        }
+        //注意：必须倒过来插入
+        for(var i=array.length-1; i>=0; i--){
+            add_sc_service(0,array[i]);
+        }
+    }
+</script>

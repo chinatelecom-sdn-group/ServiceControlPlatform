@@ -1,0 +1,52 @@
+<script>
+	var links_history_data = <%- JSON.stringify(reuslts.links)%>;
+    $("document").ready(function(){
+        //画网卡
+        for(var j=0; j<links_history_data.length; j++){
+            var name = "#id_link_history_chart_"+j;
+            var ctx = $(name).get(0).getContext("2d");
+            var dateset_rx = {
+				fillColor : "rgba(66,139,202,1)",
+				strokeColor : "rgba(220,220,220,1)",
+				pointColor : "rgba(220,220,220,1)",
+                pointStrokeColor : "#fff",
+                data : []
+            };
+            var dateset_tx = {
+                fillColor : "rgba(120,120,120,0.5)",
+                strokeColor : "rgba(220,220,220,1)",
+                pointColor : "rgba(220,220,220,1)",
+                pointStrokeColor : "#fff",
+                data : []
+            };
+            dateset_rx.data = links_history_data[j].rx;
+            dateset_tx.data = links_history_data[j].tx;
+            var data = {
+                labels:<%- JSON.stringify(reuslts.time)%>,
+                datasets : [dateset_rx,dateset_tx]
+            };
+            //alert(JSON.stringify(data));
+            var myPieChart = new Chart(ctx).Line(data,{pointDot:true,scaleShowLabels:true});//画曲线图
+        }
+    });
+	
+</script>
+<div class="panel panel-gsta-sm panel-default" style="margin: 10px;">
+    <div class="panel-body">
+        <!--实时信息-->
+        <div class="row placeholders">
+            <%for(var i=0; i<reuslts.links.length; i++){%>
+            <div class="col-xs-12 col-sm-12 placeholder">
+                <div class="panel panel-gsta-sm panel-default">
+                    <div class="panel-body">
+                        <h4>Chain:<b><%=chain_name%></b>,Header:<b>0x4B45AC73</b>&nbsp;&nbsp;&nbsp;&nbsp;Host:<b><%= JSON.stringify(reuslts.links[i].host) %></b>, Inport:<b><%= JSON.stringify(reuslts.links[i].inport.port)%></b> -->Outport:<b><%= JSON.stringify(reuslts.links[i].outport.port) %></b> (KB/S)</h4>
+						<h5><span style="background:#428BCA;">&nbsp;&nbsp;</span><span>rx</span>&nbsp;&nbsp;&nbsp;<span style="background:#CDCDCD;">&nbsp;&nbsp;</span><span>tx</span></h5>
+                        <span class="text-muted"></span><br>
+                        <canvas id="id_link_history_chart_<%=i%>" width="900" height="160"></canvas>
+                    </div>
+                </div>
+            </div>
+            <%}%>
+        </div>
+    </div>
+</div>

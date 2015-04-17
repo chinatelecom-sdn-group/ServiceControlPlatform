@@ -1,0 +1,107 @@
+<script>
+    var cpu_history_data = [<%=host_history.Cpu%>];
+    var memory_history_data = [<%=host_history.Memory%>];
+    var disk_history_data = [<%=host_history.Disk%>];
+    var network_history_data = <%-network%>;
+    var labels = <%-labels%>;
+	
+    $("document").ready(function(){
+        //画CPU、memory、disk
+        var chart_list = ["id_cpu_history_chart","id_memory_history_chart","id_disk_history_chart"];
+        var data_list = [cpu_history_data,memory_history_data,disk_history_data];
+        //alert(JSON.stringify(data_list));
+        for(var i=0; i<chart_list.length; i++){
+            var name = "#"+chart_list[i];
+            var ctx = $(name).get(0).getContext("2d");
+            var dateset = {
+                fillColor : "rgba(66,139,202,1)",
+				strokeColor : "rgba(220,220,220,1)",
+				pointColor : "rgba(220,220,220,1)",
+                pointStrokeColor : "#fff",
+                data : []
+            };
+            dateset.data = data_list[i];
+            var data = {
+                labels:labels,
+                datasets : [dateset]
+            };
+            //console.log(data);
+            var myPieChart = new Chart(ctx).Line(data,{});//画曲线图
+        }
+        //画网卡
+        //alert(network_history_data);
+        for(var j=0; j<network_history_data.length; j++){
+            var name = "#id_network_history_chart_"+j;
+            var ctx = $(name).get(0).getContext("2d");
+            var dateset_rx = {
+                fillColor : "rgba(66,139,202,1)",
+				strokeColor : "rgba(220,220,220,1)",
+				pointColor : "rgba(220,220,220,1)",
+                pointStrokeColor : "#fff",
+                data : []
+            };
+            var dateset_tx = {
+                fillColor : "rgba(220,220,220,0.5)",
+                strokeColor : "rgba(220,220,220,1)",
+                pointColor : "rgba(220,220,220,1)",
+                pointStrokeColor : "#fff",
+                data : []
+            };
+            dateset_rx.data = network_history_data[j].rx;
+            dateset_tx.data = network_history_data[j].tx;
+            var data = {
+                labels:labels,
+                datasets : [dateset_rx,dateset_tx]
+            };
+            //alert(JSON.stringify(data));
+            var myPieChart = new Chart(ctx).Line(data,{pointDot:true,scaleShowLabels:true});//画曲线图
+        }
+    });
+</script>
+<div class="panel panel-gsta-sm panel-default" style="margin: 10px;">
+    <div class="panel-body">
+        <!--实时信息-->
+        <div class="row placeholders">
+            <div class="col-xs-12 col-sm-6 placeholder">
+                <div class="panel panel-gsta-sm panel-default">
+                <div class="panel-body"  style="overflow: auto;">
+                <h4>CPU(%)</h4>
+                <span class="text-muted"></span><br>
+                <canvas id="id_cpu_history_chart" width="450" height="160"></canvas>
+            </div>
+        </div>
+            </div>
+            <div class="col-xs-12 col-sm-6 placeholder">
+                <div class="panel panel-gsta-sm panel-default">
+                    <div class="panel-body"  style="overflow: auto;">
+                <h4>Memory(<%=host_history.MemoryTotal%>M)</h4>
+                <span class="text-muted"></span><br>
+                <canvas id="id_memory_history_chart" width="450" height="160"></canvas>
+            </div>
+        </div>
+            </div>
+            <div class="col-xs-12 col-sm-6 placeholder">
+                <div class="panel panel-gsta-sm panel-default">
+                    <div class="panel-body"  style="overflow: auto;">
+                <h4>Disk(<%=host_history.DiskTotal%>M)</h4>
+                <span class="text-muted"></span><br>
+                <canvas id="id_disk_history_chart" width="450" height="160"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <%for(var i=0; i<host_history.Network.length; i++){%>
+            <div class="col-xs-12 col-sm-6 placeholder">
+                <div class="panel panel-gsta-sm panel-default">
+                    <div class="panel-body"  style="overflow: auto;">
+                    <h4><%=host_history.Network[i].name%>(KB/S)</h4>
+					<h5><span style="background:#428BCA;">&nbsp;&nbsp;</span><span>rx</span>&nbsp;&nbsp;&nbsp;<span style="background:#CDCDCD;">&nbsp;&nbsp;</span><span>tx</span></h5>
+                    <span class="text-muted"></span><br>
+                    <canvas id="id_network_history_chart_<%=i%>" width="450" height="160"></canvas>
+                </div>
+                </div>
+            </div>
+            <%}%>
+        </div>
+    </div>
+</div>

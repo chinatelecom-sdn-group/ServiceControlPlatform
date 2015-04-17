@@ -1,0 +1,94 @@
+<% include ../_main_/head %>
+<% include ../_main_/paginator %>
+<script src="/javascripts/raphael-min.js"></script>
+<script src="/javascripts/drawing.js"></script>
+<script src="/javascripts/topo_data.js"></script>
+<script src="javascripts/monitor_mgr/draw_global_view.js"></script>
+<style type="text/css">
+    #id_physics_view {
+        width:100%;
+        background-color: #f5f5f5;
+		background-image: -webkit-gradient(radial, center center, 0, center center, 600, from(#FFFFFF), to(#BBBBBB));
+    }
+</style>
+<script>
+    $("document").ready(function(){
+        $(function () { $('#collapseOne').collapse('show')});
+        $(function () { $('#collapseTwo').collapse('show')});		
+    });
+</script>
+<% include ../_main_/body_head %>
+<!--用于提示信息的一开始隐藏的信息框-->
+<div class="modal fade" id="modal-container-info-dlg" role="dialog" aria-labelledby="modal-container-info-dlg" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+				<h4 class="modal-title" id="id_info_dlg"><%=content.title_warnning%></h4>
+			</div>
+			<div class="modal-body">
+				<center><div id="modal-container-info-dlg-content"></div></center>
+			</div>
+			<div class="modal-footer form-actions">
+				<button id="info-dlg_danger"type="button" class="btn btn-default" data-dismiss="modal">OK</button>
+			</div>
+		</div>
+	</div>
+</div>
+<!---->
+
+<div class="row panel-group" id="accordion">
+    <div class="panel panel-gsta-sm panel-default">
+       
+		<div class="panel-heading">
+		<a data-toggle="collapse" data-parent="#accordion" href="#collapseOne"> 
+            <h4 class="panel-title">
+                    <span class="glyphicon glyphicon-picture"> <%=content.title_globol_topo%></span>
+                
+            </h4></a>
+        </div>
+		
+        <div id="collapseOne" class="panel-collapse collapse" style="background-color: #f5f5f5;">
+            <div class="panel-body panel-gsta-body" style="height: 300px; width: 100%;">
+                <script>
+				    var topo_data = <%- results %>;
+					$(window).load(function(){
+						paper=init_stage("id_physics_view");
+						enable_paper_clear_choosed_obj();
+						draw_global_view(topo_data);//根据数据画图形
+					});
+                 </script>
+              <div id="id_physics_view" class="row" style="height: 100%; width: 100%;"></div>
+            </div>
+        </div>
+    </div>
+    <div class="panel panel-gsta-sm panel-default">
+       
+		<div class="panel-heading">
+            <a data-toggle="collapse" data-parent="#accordion"  href="#collapseTwo"> 
+			<h4 class="panel-title">
+                
+                    <span class="glyphicon glyphicon-stats"> <%=content.title_detail_view%></span>
+                
+            </h4>
+			</a>
+        </div>
+		
+        <div id="collapseTwo" class="panel-collapse collapse">
+            <div class="panel-body">
+                <div id="id_statistics_view" class="row" >
+                    <div class="panel panel-gsta-sm panel-default"  style="margin: 10px;">
+                        <div class="panel-body">
+                            <center>
+                                <img src="images/graph.png" class="img-rounded">
+                                <h4><%=content.title_info_show_detail%></h4>
+                            </center>
+                        </div>
+                    </div>				
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<% include ../_main_/body_foot %>
+<% include ../_main_/foot %>

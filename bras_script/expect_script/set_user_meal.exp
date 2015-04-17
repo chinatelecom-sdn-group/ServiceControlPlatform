@@ -1,0 +1,14 @@
+#!/usr/bin/expect
+set timeout 4
+spawn ssh root@[lindex $argv 0]
+#login
+expect "*password:" 
+send "[lindex $argv 1]\n"
+#input command
+expect "*root\@*\]"
+send "echo \"User-Name = [lindex $argv 4],Filter-ID = [lindex $argv 5] \"| radclient -r 1 -t 2 -s [lindex $argv 2]:3799 coa [lindex $argv 3]"
+send "\n"
+expect "*root\@*\]"
+send "exit\n"
+expect eof
+exit

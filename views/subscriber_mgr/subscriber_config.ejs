@@ -1,0 +1,87 @@
+<% include ../_main_/head %>
+<% include ../_main_/paginator %>
+<% include ../_main_/body_head %>
+<% include ./subscriber_config_add_dlg%>
+<% include ../_main_/control %>
+<% include ../_main_/table %>
+<% include ../_main_/body_foot %>
+<script  LANGUAGE="JavaScript">
+    $("document").ready(function(){
+        //分页功能
+        var page=$('#page1');
+        if( $.getUrlVar("querydata")){
+        document.getElementById("input_search").value = $.getUrlVar("querydata");
+        }
+        var querydata = document.getElementById("input_search").value;
+        var options = {
+            bootstrapMajorVersion:3,
+            currentPage:page.attr('pageNum'),
+            totalPages:page.attr('pageCount'),
+            numberOfPages:page.attr('numberOfPages'),
+            pageUrl: function(type, page, current){
+                return "subscriber_config?"+composeUrlParams()+"&p="+page;
+            }
+        };
+        $('#page1').bootstrapPaginator(options);
+    });
+
+    $("a#id_btn_add_obj").click(function() {
+        //设置值
+        $("input#inputObjID").attr("value","");
+        <%for(var i=0; i<model.length; i++){%>
+        <%if(!widget.hasOwnProperty(model[i])
+            ||!widget[model[i]].hasOwnProperty("type"))
+            continue;
+        %>
+        <%if(widget[model[i]].type=="text"){%>
+        $("input#input<%=model[i]%>").attr("value","");
+        <%}else if(widget[model[i]].type=="multiple_select"){%>
+        $("select#input<%=model[i]%>").html("");
+        <%}%>
+        <%}%>
+        //设置控件
+        $("h4#id_add_dlg_ctrl").show();
+        $("h4#id_modify_dlg_ctrl").hide();
+        $("div#id_modify_dlg_ctrl").hide();
+        $("button#id_add_dlg_ctrl").show();
+        $("button#id_modify_dlg_ctrl").hide();
+    });
+    $("a#id_modify_user").click(function(){
+        //设置值
+        var detail =  $(this).attr('detail');
+        var encoded = eval("("+detail+")");
+
+        $("input#inputObjID").attr("value",encoded._id);
+        <%for(var i=0; i<model.length; i++){%>
+        <%if(!widget.hasOwnProperty(model[i])
+        ||!widget[model[i]].hasOwnProperty("type"))
+            continue;
+        %>
+        <%if(widget[model[i]].type=="text"){%>
+        $("input#input<%=model[i]%>").attr("value",encoded["<%=model[i]%>"]);
+        <%}else if(widget[model[i]].type=="select"){%>
+        $("select#input<%=model[i]%>").val(encoded["<%=model[i]%>"]);
+        <%} else if(widget[model[i]].type=="multiple_select"){%>
+        $("select#input<%=model[i]%>").html("");
+        var temp = encoded["<%=model[i]%>"];
+        for (var j=0;j<temp.length;j++)
+        {
+            var newOption = "<option value='"+JSON.stringify(temp[j])+"'>"+temp[j].Name+"</option>";
+            $("select#input<%=model[i]%>").append(newOption);
+        }
+        <%}%>
+        <%}%>
+        //设置控件
+        $("h4#id_add_dlg_ctrl").hide();
+        $("h4#id_modify_dlg_ctrl").show();
+        $("div#id_modify_dlg_ctrl").show();
+        $("button#id_add_dlg_ctrl").hide();
+        $("button#id_modify_dlg_ctrl").show();
+        $("#modal-container-858025").modal('show');
+    });
+    $("button#id_search").click(function(){
+        var querydata = document.getElementById("input_search").value;
+        window.location = "http://127.0.0.1:3000/subscriber_config?p=-1"+"&querydata="+querydata;
+    });
+</script>
+<% include ../_main_/foot %>

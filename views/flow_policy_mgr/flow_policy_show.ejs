@@ -1,0 +1,70 @@
+<div class="modal fade" id="modal-container-858025" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form class="form-horizontal" method="post" action="/flow_policy/add">
+                <fieldset>
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                        <h4 class="modal-title" id="myModalLabel-add" name="myModalLabel-add">
+                            <%= content.dlg_add_title %>
+                        </h4>
+                        <h4 class="modal-title" id="myModalLabel-modify" name="myModalLabel-modify">
+                            <%= content.dlg_modify_title %>
+                        </h4>
+                    </div>
+                    <div class="modal-body">
+                        INPUT_SELECT_REFERENCE_DIV
+                        <div class="modal-footer form-actions">
+                            <button type="button" class="btn btn-default" data-dismiss="modal"><%= nav_head.btn_close %></button>
+                            <button type="button" class="btn btn-primary" id="id_btn_add_flow_policy" name="id_btn_add_flow_policy" data-dismiss="modal">
+                                <%= nav_head.btn_save %>
+                            </button>
+                            <button type="button" class="btn btn-primary" id="id_btn_modify_flow_policy" name="id_btn_modify_flow_policy" data-dismiss="modal">
+                                <%= nav_head.btn_save %>
+                            </button>
+                        </div>
+                </fieldset>
+            </form>
+        </div>
+    </div>
+</div>
+<script>
+    $("document").ready(function(){
+
+    });
+    $("button#id_btn_add_flow_policy").click(function(){
+        function_ajax("post");
+    });
+    $("button#id_btn_modify_flow_policy").click(function(){
+        function_ajax("put");
+    });
+    function function_ajax(type){
+        var ServicePackageID = $("#inputServicePackageID").val();
+        var ServicePackageName = $("#inputServicePackageName").val();
+        var ServiceTemplateList = new Array();
+        $("#id_service_template_list option").each(function(){
+            var tmp = eval("("+$(this).val()+")");
+            if(tmp!=null){
+                var obj = {"_id":tmp._id,"Name":tmp.Name};
+                ServiceTemplateList.push(obj);
+            }
+        });
+        $.ajax({
+            type:type,
+            url:"/flow_policy",
+            data:{
+                id:ServicePackageID,
+                Name:ServicePackageName,
+                ServiceTemplateList:ServiceTemplateList
+            },
+            success:function(msg){
+                $("#modal-container-info-dlg-content").html(msg);
+                $("#modal-container-info-dlg").modal('show');
+            },
+            error:function(err){
+                $("#modal-container-info-dlg-content").html(err);
+                $("#modal-container-info-dlg").modal('err');
+            }
+        });
+    }
+</script>

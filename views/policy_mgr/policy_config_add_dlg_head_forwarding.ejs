@@ -1,0 +1,28 @@
+<div class="form-group">
+    <label for="inputServicePackageName" class="col-sm-3 control-label"><%= content.action %></label>
+    <div class="col-sm-9">
+        <select class="form-control" id="inputAction" name="inputAction">
+            <%for(var action_list_index=0; action_list_index<content.action_list.length; action_list_index++){%>
+            <option  value="<%=content.action_list[action_list_index]%>"><%=content.action_list[action_list_index]%></option>
+            <%}%>
+        </select>
+    </div>
+</div>
+<script>
+    function head_forwarding_policy_content(){
+        var temp = {
+            Action:""
+        };
+        temp.Action = $("select#inputAction option:selected").val();
+        return $.toJSON(temp);
+    }
+
+    function head_forwarding_policy_content_clear(){
+        $("select#inputAction").attr("value","");
+    }
+
+    function head_forwarding_policy_content_modify(content){
+        var PolicyContent = eval("("+content+")");
+        $("select#inputAction").val(PolicyContent.Action);
+    }
+</script>

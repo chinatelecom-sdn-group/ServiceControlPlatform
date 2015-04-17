@@ -1,0 +1,71 @@
+<div class="form-group">
+    <label for="inputServicePackageName" class="col-sm-3 control-label"><%= content.src_ip %></label>
+    <div class="col-sm-9">
+        <input type="text" class="form-control" id="inputSourceIP" name="inputSourceIP" />
+    </div>
+</div>
+<div class="form-group">
+    <label for="inputServicePackageName" class="col-sm-3 control-label"><%= content.src_port %></label>
+    <div class="col-sm-9">
+        <input type="text" class="form-control" id="inputSourcePort" name="inputSourcePort" />
+    </div>
+</div>
+<div class="form-group">
+    <label for="inputServicePackageName" class="col-sm-3 control-label"><%= content.protocol %></label>
+    <div class="col-sm-9">
+        <input type="text" class="form-control" id="inputProtocol" name="inputProtocol" />
+    </div>
+</div>
+<div class="form-group">
+    <label for="inputServicePackageName" class="col-sm-3 control-label"><%= content.dst_ip %></label>
+    <div class="col-sm-9">
+        <input type="text" class="form-control" id="inputDestinationIP" name="inputDestinationIP" />
+    </div>
+</div>
+<div class="form-group">
+    <label for="inputServicePackageName" class="col-sm-3 control-label"><%= content.dst_port %></label>
+    <div class="col-sm-9">
+        <input type="text" class="form-control" id="inputDestinationPort" name="inputDestinationPort" />
+    </div>
+</div>
+<div class="form-group">
+    <label for="inputServicePackageName" class="col-sm-3 control-label"><%= content.action %></label>
+    <div class="col-sm-9">
+        <select class="form-control" id="inputAction" name="inputAction">
+            <%for(var action_list_index=0; action_list_index<content.action_list.length; action_list_index++){%>
+            <option  value="<%=content.action_list[action_list_index]%>"><%=content.action_list[action_list_index]%></option>
+            <%}%>
+        </select>
+    </div>
+</div>
+<script>
+    function basic_forwarding_policy_content(){
+        var temp = {SourceIP:"",SourcePort:"",Protocol:"",DestinationIP:"",DestinationPort:"",Action:""};
+        temp.SourceIP = $("input#inputSourceIP").val();
+        temp.SourcePort = $("input#inputSourcePort").val();
+        temp.Protocol = $("input#inputProtocol").val();
+        temp.DestinationIP = $("input#inputDestinationIP").val();
+        temp.DestinationPort = $("input#inputDestinationPort").val();
+        temp.Action = $("select#inputAction option:selected").val();
+        return $.toJSON(temp);
+    }
+
+    function basic_forwarding_policy_content_clear(){
+        $("input#inputSourceIP").attr("value","");
+        $("input#inputSourcePort").attr("value","");
+        $("input#inputProtocol").attr("value","");
+        $("input#inputDestinationIP").attr("value","");
+        $("input#inputDestinationPort").attr("value","");
+        $("select#inputAction").attr("value","");
+    }
+
+    function basic_forwarding_policy_content_modify(content){
+        var PolicyContent = eval("("+content+")");
+        $("input#inputSourceIP").attr("value",PolicyContent.SourceIP);
+        $("input#inputSourcePort").attr("value",PolicyContent.SourcePort);
+        $("input#inputProtocol").attr("value",PolicyContent.Protocol);
+        $("input#inputDestinationIP").attr("value",PolicyContent.DestinationIP);
+        $("input#inputDestinationPort").attr("value",PolicyContent.DestinationPort);
+        $("select#inputAction").val(PolicyContent.Action);
+    }
+ </script>

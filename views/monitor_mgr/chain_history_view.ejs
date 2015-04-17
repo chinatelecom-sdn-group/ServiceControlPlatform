@@ -1,0 +1,84 @@
+<script>
+    var chastart_history_data = <%-results%>;
+    var labels = chastart_history_data.time;
+    $("document").ready(function(){
+        //画chain的流量
+        var dateset_start_rx = {
+            fillColor : "rgba(66,139,202,1)",
+			strokeColor : "rgba(220,220,220,1)",
+			pointColor : "rgba(220,220,220,1)",
+            pointStrokeColor : "#fff",
+            data : []
+        };
+        var dateset_start_tx = {
+            fillColor : "rgba(220,220,220,0.5)",
+			strokeColor : "rgba(220,220,220,1)",
+			pointColor : "rgba(220,220,220,1)",
+            pointStrokeColor : "#fff",
+            data : []
+        };
+		var dateset_end_rx = {
+            fillColor : "rgba(66,139,202,1)",
+			strokeColor : "rgba(220,220,220,1)",
+			pointColor : "rgba(220,220,220,1)",
+            pointStrokeColor : "#fff",
+            data : []
+        };
+        var dateset_end_tx = {
+            fillColor : "rgba(220,220,220,0.5)",
+			strokeColor : "rgba(220,220,220,1)",
+			pointColor : "rgba(220,220,220,1)",
+            pointStrokeColor : "#fff",
+            data : []
+        };
+		
+		
+        dateset_start_rx.data = chastart_history_data.start_rx;
+        dateset_start_tx.data = chastart_history_data.start_tx;
+		dateset_end_rx.data = chastart_history_data.end_rx;
+        dateset_end_tx.data = chastart_history_data.end_tx;
+		
+        var data = {
+            labels:labels,
+            datasets : [dateset_start_rx,dateset_start_tx]
+        };
+        //alert(JSON.stringify(data));
+        new Chart($("#id_chastart_history_chart_rx").get(0).getContext("2d")).Line({
+            labels:labels,
+            datasets : [dateset_start_rx,dateset_start_tx]
+        },{pointDot:true,scaleShowLabels:true});//画曲线图
+		new Chart($("#id_chastart_history_chart_tx").get(0).getContext("2d")).Line({
+            labels:labels,
+            datasets : [dateset_end_rx,dateset_end_tx]
+        },{pointDot:true,scaleShowLabels:true});//画曲线图
+		
+    });
+</script>
+<div class="panel panel-gsta-sm panel-default" style="margin: 10px;">
+    <div class="panel-body">
+        <!--实时信息-->
+        <div class="row placeholders">
+           <h4><%=name%></h4> 
+			<div class="col-xs-12 col-sm-6 placeholder">
+                <div class="panel panel-gsta-sm panel-default">
+                    <div class="panel-body">
+                        <h4>入口流量 (KB/S)</h4>
+						   <h5><span style="background:#428BCA;">&nbsp;&nbsp;</span><span>rx</span>&nbsp;&nbsp;&nbsp;<span style="background:#CDCDCD;">&nbsp;&nbsp;</span><span>tx</span></h5>
+                        <span class="text-muted"></span><br>
+                        <canvas id="id_chastart_history_chart_rx" width="450" height="160"></canvas>
+                    </div>
+                </div>
+            </div>
+			 <div class="col-xs-12 col-sm-6 placeholder">
+                <div class="panel panel-gsta-sm panel-default">
+                    <div class="panel-body"  style="overflow: auto;">
+                        <h4>出口流量 (KB/S)</h4>
+						    <h5><span style="background:#428BCA;">&nbsp;&nbsp;</span><span>rx</span>&nbsp;&nbsp;&nbsp;<span style="background:#CDCDCD;">&nbsp;&nbsp;</span><span>tx</span></h5>
+                        <span class="text-muted"></span><br>
+                        <canvas id="id_chastart_history_chart_tx" width="450" height="160"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

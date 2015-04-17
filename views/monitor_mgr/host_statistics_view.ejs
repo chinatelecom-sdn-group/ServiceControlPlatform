@@ -1,0 +1,39 @@
+<ul id="myTab" class="nav nav-tabs">
+    <li>
+        <a>
+            <span class="label label-primary" id="host_name"><%=host.Name%></span>
+        </a>
+    </li>
+    <li class="active">
+        <a href="#step1" data-toggle="tab">
+            RunTime
+        </a>
+    </li>
+    <li>
+        <a href="#step2" data-toggle="tab">
+            History
+        </a>
+    </li>
+</ul>
+<div id="myTabContent" class="tab-content">
+    <input id="fathercontent" name="fathercontent" type="text" style="display: none" value="">
+    <div class="tab-pane fade in active" id="step1">
+        <div class="form-group">
+            <div class="panel panel-gsta-sm panel-default" style="margin: 10px;">
+                <div class="panel-body">
+                    <%include host_runtime_view.ejs%>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="tab-pane fade" id="step2">
+        <div class="form-group">
+            <!--历史信息-->
+            <div class="panel panel-gsta-sm panel-default" style="margin: 10px;">
+                <div class="panel-body">
+                    <%include query_frame.ejs%>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

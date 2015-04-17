@@ -1,0 +1,59 @@
+<div class="modal fade" id="modal-container-select-app" role="dialog" aria-labelledby="modal-container-select-dlg" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form class="form-horizontal" method="post">
+                <fieldset>
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                        <h4 class="modal-title" id="myModalLabel">
+                            <%= content.dlg_add_title %>
+                        </h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <div class="col-sm-5">
+                                <label for="name">可多选的选择列表</label>
+                                <select multiple="multiple"  class="form-control" id="id_Service_Template_library_list" name="id_Service_Template_library_list">
+                                    <option>1</option>
+                                    <option>2</option>
+                                    <option>3</option>
+                                    <option>4</option>
+                                    <option>5</option>
+                                </select>
+                            </div>
+                            <div class="col-sm-1">
+                                <button type="button" class="btn btn-sm btn-default" id="id_btn_add" name="id_btn_add">
+                                    <span class="glyphicon glyphicon-chevron-left"></span>
+                                </button>
+                            </div>
+                            <div class="col-sm-1">
+                                <button type="button" class="btn btn-sm btn-default" id="id_btn_add" name="id_btn_add">
+                                    <span class="glyphicon glyphicon-chevron-right"></span>
+                                </button>
+                            </div>
+                            <div class="col-sm-5">
+                                <label for="name">可多选的选择列表</label>
+                                <select multiple="multiple"  class="form-control" id="id_Service_Template_select_list" name="id_Service_Template_select_list">
+                                    <option>1</option>
+                                    <option>2</option>
+                                    <option>3</option>
+                                    <option>4</option>
+                                    <option>5</option>
+                                    <option>1</option>
+                                    <option>2</option>
+                                    <option>3</option>
+                                    <option>4</option>
+                                    <option>5</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer form-actions">
+                        <button type="button" class="btn btn-default" data-dismiss="modal"><%= nav_head.btn_close %></button>
+                        <button type="submit" class="btn btn-primary"><%= nav_head.btn_save %></button>
+                    </div>
+                </fieldset>
+            </form>
+        </div>
+    </div>
+</div>

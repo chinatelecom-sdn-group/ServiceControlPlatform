@@ -1,0 +1,214 @@
+<% include ../_main_/head %>
+<% include ../_main_/paginator %>
+
+<% include ../_main_/body_head %>
+<style>
+#print_out_area {
+	width:100%;
+	height:350px;
+	overflow: scroll;
+    border: 1px solid #000;
+    -moz-border-radius: 10px;
+    -webkit-border-radius: 10px;	
+	//border: 1px solid #000;
+}
+
+.debug_info_style {
+	width:100%;
+	//background: #D5F2FF;
+	//background:bisque;
+	//background:#DDDDDD;
+	background:#F0F8F3;
+    //border: 1px solid #000;
+    //-moz-border-radius: 10px;
+    //-webkit-border-radius: 10px;	
+	border: 1px solid #000;
+}
+
+.debug_info_div_style {
+	width:100%;
+    //border: 1px solid #000;
+    //-moz-border-radius: 10px;
+    //-webkit-border-radius: 10px;	
+	//border: 1px solid #000;
+}
+</style>
+
+<script>
+
+window.onload=function()
+{
+}
+function output_debgu_info(debug_info,order)
+{
+	function F1(str)
+	{
+	    if(String(str).length==1)
+		    return "0"+String(str);
+		else
+		    return String(str);
+	}
+	now=new Date();
+	now_time=String(F1(now.getHours())+":"+F1(now.getMinutes())+":"+F1(now.getSeconds()));
+	
+	print_area=$("#print_out_area")[0];
+	print_area.innerHTML+=	"<br/><b>"+order+"</b>       ---"+now_time+"<br/>"+"<div class='debug_info_div_style'><textarea class='input-xlarge debug_info_style' rows='10' readonly='true'>"+debug_info+"</textarea></div><br/>";
+	print_area.scrollTop=print_area.scrollHeight;
+}
+
+function show_user_meal(user)
+{
+    $.ajax({
+			type:"get",
+			url:"/monitor_get_user_meal?",
+			data:{"user":user},
+			success:function(msg){
+				$("#sc_project_selector").val(msg.meal);
+				$("#user_name_field").html(user);
+				$("#modal-container-info-dlg").modal('show');
+				output_debgu_info(msg.debug_info,"GET /monitor_get_user_meal?user="+user);
+			},
+			error:function(err){
+			    $("#modal-container-info-dlg-content").html("404 !!");
+				$("#modal-container-info-dlg_0").modal('show');
+			}
+			});
+	
+}
+
+function set_user_meal(user,meal)
+{
+	if(meal==null)
+	    return;
+	$.ajax({
+			type:"get",
+			url:"/monitor_set_user_meal?",
+			data:{"user":user,"meal":meal},
+			success:function(msg){
+				$("#sc_project_selector").val("");
+				$("#user_name_field").html("");
+				$("#modal-container-info-dlg-content").html(msg.message);
+				$("#modal-container-info-dlg").modal('hide');
+				$("#modal-container-info-dlg_0").modal('show');
+				output_debgu_info(msg.debug_info,"GET /monitor_set_user_meal?user="+user+"&meal="+meal);
+				if(msg.message=="success")
+				{
+					lines=$('tr');//不刷新页面更改套餐的显示
+					for(var i=1;i<lines.length;i++)
+					{
+						if(lines[i].children[0].innerText==user)
+						{
+							lines[i].children[2].innerHTML=meal;
+							break;
+						}
+					}
+				}
+			},
+			error:function(err){
+			    $("#modal-container-info-dlg").modal('hide');
+				$("#modal-container-info-dlg-content").html("404 !!");
+				$("#modal-container-info-dlg_0").modal('show');
+			}
+			});
+	
+}
+
+
+</script>
+
+<!--提示框-->
+<div class="modal fade" id="modal-container-info-dlg_0" role="dialog" aria-labelledby="modal-container-info-dlg" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h4 class="modal-title" id="id_info_dlg"><%= content.title_info%></h4>
+            </div>
+            <div class="modal-body">
+                <center><div id="modal-container-info-dlg-content"></div></center>
+            </div>
+            <div class="modal-footer form-actions">
+                <button type="button" class="btn btn-default" data-dismiss="modal">OK</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!--->
+
+
+
+<!--用于提示信息的一开始隐藏的信息框-->
+<div class="modal fade" id="modal-container-info-dlg" role="dialog" aria-labelledby="modal-container-info-dlg" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+				<h4 class="modal-title" id="id_info_dlg"><%= content.title_meal%></h4>
+			</div>
+			
+			<div>
+				<br/><br/>
+                  <b>				
+					<h4 class="col-sm-6 panel-title">
+						<center><span id="user_name_field"></span> :</center>
+					</h4>
+                 <div class="col-sm-6" style="margin: -6px; padding: 0px"> 
+						<div class='col-sm-5 input-group input-group-sm pull-rigth' >					  
+                        <select class="combobox form-control" id="sc_project_selector">
+                            <option value="qos2m">qos2m</option>
+                            <option value="qos4m">qos4m</option>
+                            <option value="qos6m">qos6m</option>
+                            <option value="qos8m">qos8m</option>
+                            <option value="qos10m">qos10m</option>
+                            <option value="qos12m">qos12m</option>
+                            <option value="qos20m">qos20m</option>
+                        </select>
+                    </div>
+                  </div>
+				    </b>
+				<br/><br/>
+			</div>
+			<div class="modal-footer form-actions">
+			<center>
+				<button id="info-dlg_cancle"type="button" class="btn btn-default" data-dismiss="modal" ><%= content.title_cancel%></button>
+				<button id="info-dlg_cancle"type="button" class="btn btn-primary" data-dismiss="modal" onclick="set_user_meal($('#user_name_field').html(),$('#sc_project_selector').val());"><%= content.title_save%></button>
+			</center>
+			</div>
+		</div>
+	</div>
+</div>
+<!---->
+
+<H4><%= content.title_online_user%>:</H4>
+<div class="form-group">
+	<div class="panel panel-gsta-sm panel-default" style="margin: 10px;">
+		<div class="panel-body">
+			<div class="row placeholders table-responsive">
+				<table class="table table-striped table-hover table-condensed">
+					<thead>
+					<tr>
+						<th><center><%= content.title_online_user%></center></th>
+						<th><center>IP</center></th>
+						<th><center><%= content.title_meal%></center></th>
+						<th><center>&nbsp;</center></th>
+					</tr>
+					</thead>
+					<tbody>
+					<% for(var i=0; i<result.length; i++) { %>
+					<tr>
+						<td ><%= result[i][0] %></td>
+						<td ><%= result[i][1] %></td>
+						<td ><%= result[i][2] %></td>
+						<td ><a href="javascript:show_user_meal('<%= result[i][0] %>');"><span class="glyphicon glyphicon-edit"></span></a></td>
+					</tr>
+					<% } %>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+</div>
+<H4><%= content.title_degug_info%>:</H4>
+<div id="print_out_area" ><br/><b>----start debug mode----</b><br/><div class='debug_info_div_style'><textarea class='input-xlarge debug_info_style' rows='10' readonly='true'><%= debug_info %></textarea></div><br/><br/></div>
+<% include ../_main_/body_foot %>
+<% include ../_main_/foot %>

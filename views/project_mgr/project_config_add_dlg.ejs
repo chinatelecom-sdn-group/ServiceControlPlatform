@@ -1,0 +1,207 @@
+<div class="modal fade in" id="modal-container-858025" role="dialog" aria-labelledby="modal-container-select-dlg" aria-hidden="true" style="overflow: auto">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form class="form-horizontal">
+                <fieldset>
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                        <h4 class="modal-title" id="myModalLabel-add" name="myModalLabel-add" style="display:none">
+                            <%= content.dlg_add_title %>
+                        </h4>
+                        <h4 class="modal-title" id="myModalLabel-modify" name="myModalLabel-modify" style="display:none">
+                            <%= content.dlg_modify_title %>
+                        </h4>
+                        <h4 class="modal-title" id="myModalLabel-add-slave" name="myModalLabel-add-slave" style="display:none">
+                            <%= content.dlg_add_slave_title %>:<label id="labelMasterProjectName"></label>
+                        </h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group" id="id_div_project_id" name="id_div_project_id">
+                            <label for="inputEmail3" class="col-sm-3 control-label"><%= content.project_id %></label>
+                            <div class="col-sm-8">
+                                <input type="text" class="form-control" id="inputProjectID" name="inputProjectID" readonly="true"/>
+                            </div>
+                        </div>
+                        <div class="form-group" id="id_div_master_project_id" name="id_div_master_project_id" style="display: none;">
+                            <label for="inputEmail3" class="col-sm-3 control-label">Master Project ID</label>
+                            <div class="col-sm-8">
+                                <input type="text" class="form-control" id="inputMasterProjectID" name="inputMasterProjectID" readonly="true"/>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="inputEmail3" class="col-sm-3 control-label"><%= content.project_name %></label>
+                            <div class="col-sm-8">
+                                <input type="text" class="form-control" id="inputProjectName" name="inputProjectName" />
+                                <span class=help-block">SubscriberGroupType-ServicePackageType-Name</span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="inputEmail3" class="col-sm-3 control-label"><%= content.project_description%></label>
+                            <div class="col-sm-8">
+                                <input type="text" class="form-control" id="inputProjectDescription" name="inputProjectDescription" />
+                            </div>
+                        </div>
+                        <div class="">
+                            <ul id="myTab" class="nav nav-tabs">
+                                <li class="active">
+                                    <a href="#step1" data-toggle="tab">
+                                        <%= content.select_subscriber_group %>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#step2" data-toggle="tab">
+                                        <%= content.select_service_package %>
+                                    </a>
+                                </li>
+                            </ul>
+                            <div id="myTabContent" class="tab-content">
+                                <input id="fathercontent" name="fathercontent" type="text" style="display: none" value="">
+                                <div class="tab-pane fade in active" id="step1">
+                                    <div class="form-group">
+                                        <label for="inputEmail3" class="col-sm-3 control-label"><%= content.select_subscriber_group_list %></label>
+                                        <div class="col-sm-7">
+                                            <select multiple="multiple"  class="form-control input-lg" style="height: 250px" id="id_subscriber_group_list" name="id_subscriber_group_list">
+
+                                            </select>
+                                        </div>
+                                        <div class="col-sm-2">
+                                            <button type="button" class="btn btn-sm btn-default" id="id_btn_select_subscriber_group" name="id_btn_select_subscriber_group">
+                                                <span class="glyphicon glyphicon-plus"></span>
+                                            </button>
+                                            <button type="button" class="btn btn-sm btn-default" id="id_btn_del_subscriber_group" name="id_btn_del_subscriber_group">
+                                                <span class="glyphicon glyphicon-minus"></span>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="tab-pane fade" id="step2">
+                                    <div class="form-group">
+                                        <label for="inputEmail3" class="col-sm-3 control-label"><%= content.select_service_package_list %></label>
+                                        <div class="col-sm-7">
+                                            <select multiple="multiple"  class="form-control input-lg" style="height: 250px" id="id_service_package_list" name="id_service_package_list">
+
+                                            </select>
+                                        </div>
+                                        <div class="col-sm-2">
+                                            <button type="button" class="btn btn-sm btn-default" id="id_btn_select_service_package" name="id_btn_select_service_package">
+                                                <span class="glyphicon glyphicon-plus"></span>
+                                            </button>
+                                            <button type="button" class="btn btn-sm btn-default" id="id_btn_del_service_package" name="id_btn_del_service_package">
+                                                <span class="glyphicon glyphicon-minus"></span>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer form-actions">
+                        <button type="button" class="btn btn-default" data-dismiss="modal"><%= nav_head.btn_close %></button>
+                        <button type="button" class="btn btn-primary" id="id_btn_add_project" name="id_btn_add_project" data-dismiss="modal">
+                            <%= nav_head.btn_save %>
+                        </button>
+                        <button type="button" class="btn btn-primary" id="id_btn_modify_project" name="id_btn_modify_project" data-dismiss="modal">
+                            <%= nav_head.btn_save %>
+                        </button>
+                    </div>
+                </fieldset>
+            </form>
+        </div>
+    </div>
+</div>
+<script>
+    $("document").ready(function(){
+
+    });
+    $("button#id_btn_select_subscriber_group").click(function(){
+        $("#fathercontent").attr("value","modal-container-select-subscriber-dlg");
+        $.ajax({
+            type:"get",
+            url:"/subscriber_group_config/get_content",
+            success:function(msg){
+                $("#modal-container-select-subscriber-dlg-content").html(msg);
+                $("#modal-container-select-subscriber-dlg").modal('show');
+                $("#fathercontent").attr("value","");
+            },
+            error:function(err){
+                alert(err);
+            }
+        });
+    });
+    $("button#id_btn_select_service_package").click(function(){
+        $("#fathercontent").attr("value","modal-container-select-service-dlg");
+        $.ajax({
+            type:"get",
+            url:"/service_package/get_content",
+            success:function(msg){
+                $("#modal-container-select-service-dlg-content").html(msg);
+                $("#modal-container-select-service-dlg").modal('show');
+                $("#fathercontent").attr("value","");
+            },
+            error:function(err){
+                alert(err);
+            }
+        });
+    });
+
+    $("button#id_btn_del_subscriber_group").click(function(){
+        $("#id_subscriber_group_list option:selected").remove();
+    });
+
+    $("button#id_btn_del_service_package").click(function(){
+        $("#id_service_package_list option:selected").remove();
+    });
+
+    $("button#id_btn_add_project").click(function(){
+        func_ajax("post");
+    });
+    //---------------------------------------------------------
+    $("button#id_btn_modify_project").click(function(){
+        func_ajax("put");
+    });
+
+    function func_ajax(type){
+        var ProjectID = $("#inputProjectID").val();
+        var MasterProjectID = $("#inputMasterProjectID").val();
+        var ProjectName = $("#inputProjectName").val();
+        var ProjectDescription = $("#inputProjectDescription").val();
+        var SubscriberGroupList = new Array();
+        var ServicePackageList = new Array();
+        $("#id_subscriber_group_list option").each(function(){
+            var subscriber_group = eval("("+$(this).val()+")");
+            if(subscriber_group!=null){
+                var tmp = {"_id":subscriber_group._id,"Name":subscriber_group.Name};
+                SubscriberGroupList.push(tmp);
+            }
+        });
+
+        $("#id_service_package_list option").each(function(){
+            var service_package = eval("("+$(this).val()+")");
+            if(service_package!=null){
+                var tmp = {"_id":service_package._id,"Name":service_package.Name};
+                ServicePackageList.push(tmp);
+            }
+        });
+        $.ajax({
+            type:type,
+            url:"/project_config",
+            data:
+            {
+                id:ProjectID,
+                MasterId:MasterProjectID,
+                Name:ProjectName,
+                Description:ProjectDescription,
+                SubscriberGroupList:SubscriberGroupList,
+                ServicePackageList:ServicePackageList
+            },
+            success:function(msg){
+                $("#modal-container-info-dlg-content").html(msg);
+                $("#modal-container-info-dlg").modal('show');
+            },
+            error:function(err){
+                $("#modal-container-info-dlg-content").html(err);
+                $("#modal-container-info-dlg").modal('err');
+            }
+        });
+    }
+</script>

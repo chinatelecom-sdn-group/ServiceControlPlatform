@@ -1,0 +1,77 @@
+<div class="form-group">
+    <label for="inputSubscriberList" class="col-sm-3 control-label"><%= content.VirtualSubscriberList %></label>
+    <div class="col-sm-7">
+        <select multiple="multiple"  class="form-control input-lg" style="height: 250px" id="inputVirtualSubscriberList" name="inputVirtualSubscriberList">
+
+        </select>
+    </div>
+    <div class="col-sm-2">
+        <button type="button" class="btn btn-sm btn-default" id="id_btn_select_virtual_subscriber" name="id_btn_select_virtual_subscriber">
+            <span class="glyphicon glyphicon-plus"></span>
+        </button>
+        <button type="button" class="btn btn-sm btn-default" id="id_btn_del_virtual_subscriber" name="id_btn_del_virtual_subscriber">
+            <span class="glyphicon glyphicon-minus"></span>
+        </button>
+    </div>
+</div>
+<script>
+    function virtual_group_content(){
+        var tempList = new Array();
+        $("select#inputVirtualSubscriberList option").each(function(){
+            var tmp = eval("("+$(this).val()+")");
+            if(tmp!=null){
+                var obj = {"_id":tmp._id,"Name":tmp.Name};
+                tempList.push(obj);
+            }
+        });
+        var temp = {
+            id:$("input#inputObjID").val(),
+            Name:$("input#inputSubscriberGroupName").val(),
+            Type:"Virtual",
+            ServiceType:"-",
+            ServiceProvider:"-",
+            Company:"-",
+            Location:"-",
+            SubscriberListNum:tempList.length,
+            SubscriberList:tempList
+        };
+        return temp;
+    }
+
+    function virtual_group_content_clear(){
+        $("select#inputVirtualSubscriberList").html("");
+    }
+
+    function virtual_group_content_modify(encoded){
+        $("select#inputServiceType").val(encoded.ServiceType);
+        $("select#inputServiceProvider").val(encoded.ServiceProvider);
+        $("input#inputCompany").attr("value",encoded.Company);
+        $("input#inputLocation").attr("value",encoded.Location);
+        $("select#inputVirtualSubscriberList").html("");
+        for (var j=0;j<encoded.SubscriberList.length;j++)
+        {
+            var newOption = "<option value='"+JSON.stringify(encoded.SubscriberList[j])+"'>"+encoded.SubscriberList[j].Name+"</option>";
+            $("select#inputVirtualSubscriberList").append(newOption);
+        }
+    }
+
+    $("button#id_btn_select_virtual_subscriber").click(function(){
+        $.ajax({
+            type:"get",
+            url:"/virtual_subscriber_config/get_content",
+            success:function(msg){
+                $("#select_dlg_subscriber_type").html("virtual");
+                $("#select_dlg_title").html("<%= content.dlg_select_virtual_subscriber_title %>");
+                $("#modal-container-select-dlg-content").html(msg);
+                $("#modal-container-select-dlg").modal('show');
+            },
+            error:function(err){
+                alert(err);
+            }
+        });
+    });
+
+    $("button#id_btn_del_virtual_subscriber").click(function(){
+        $("#inputVirtualSubscriberList option:selected").remove();
+    });
+</script>

@@ -1,0 +1,146 @@
+<div class="form-group">
+    <label for="inputAlgorithm" class="col-sm-3 control-label"><%= content.algorithm %></label>
+    <div class="col-sm-9">
+        <select class="form-control" id="inputAlgorithm" name="inputAlgorithm">
+            <option  value="Random">Random(default)</option>
+            <option  value="RoundRobin">Round Robin</option>
+            <option  value="LeastLoad">Least Load</option>
+            <option  value="HybridLoadBalance">Hybrid Load Balance</option>
+        </select>
+    </div>
+</div>
+<div class="form-group">
+    <label  class="col-sm-3 control-label"><%= content.pf_logical_chain %></label>
+    <div class="col-sm-9">
+        <div class="cover" style="border: 1px solid #D6D6D6;padding: 5px; line-height:2" id="id_div_pf_path_auto" name="id_div_pf_path_auto">
+            <div class="btn-group"  id="id_div_pf_path_auto0" name="id_div_pf_path_auto0">
+                <a id="id_add_pf_path_auto" name="id_add_pf_path_auto" class="btn btn-xs" onclick="add_pf_path_auto(0,'FW');">
+                    <span class="glyphicon glyphicon-plus-sign" style="color: #44a3e4;"></span>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    var id_div_pf_path_auto = 0;
+    var pf_path_auto_tmp = "<div class='btn-group'  id='id_div_pf_path_auto0' name='id_div_pf_path_auto0'>\
+                <a id='id_add_pf_path_auto' name='id_add_pf_path_auto' class='btn btn-xs' onclick='add_pf_path_auto(0,\"FW\");'>\
+                <span class='glyphicon glyphicon-plus-sign' style='color: #44a3e4;'></span>\
+                </a>\
+                </div>";
+    $("document").ready(function(){
+        id_div_pf_path_auto = $('div#id_div_pf_path_auto').children().length+1;
+    });
+    function add_pf_path_auto(id,name) {
+        var control = "";
+        control += "<div class='btn-group'  id='id_div_pf_path_auto"+id_div_pf_path_auto+"' name='id_div_pf_path_auto"+id_div_pf_path_auto+"'>";
+        control += "<button id='id_info_pf_path_auto"+id_div_pf_path_auto+"' name='id_info_pf_path_auto"+id_div_pf_path_auto+"'";
+        control += "    type='button' class='btn btn-xs btn-primary dropdown-toggle' data-toggle='dropdown' value='"+name+"'>";
+        control += "  "+name+"&nbsp;";
+        control += "  <span class='caret'></span>";
+        control += "</button>";
+        control += "<button  id='id_del_pf_path_auto"+id_div_pf_path_auto+"' name='id_del_pf_path_auto"+id_div_pf_path_auto+"'";
+        control += "   type='button' class='btn btn-xs btn-primary' onclick='del_pf_path_auto("+id_div_pf_path_auto+");' style='color:#f88742;'>";
+        control += "    <span class='glyphicon glyphicon-remove'></span>";
+        control += "</button>";
+        control += "<ul class='dropdown-menu' role='menu'>";
+        <%for(var pf_path_auto_index=0; pf_path_auto_index<content.service_list.length; pf_path_auto_index++){%>
+        control += "    <li>"
+        control += "        <a value=\"";
+        control += "<%=content.service_list[pf_path_auto_index]%>";
+        control += "\" onclick=\"modify_pf_path_auto("+ id_div_pf_path_auto +",'";
+        control += "<%=content.service_list[pf_path_auto_index]%>";
+        control += "');\">";
+        control += "<%=content.service_list[pf_path_auto_index]%>";
+        control += "</a>";
+        control += "    </li>";
+        <%}%>
+        control += "</ul>";
+        control += "      <a id=\"id_add_pf_path_auto\" name=\"id_add_pf_path_auto\" class=\"btn btn-xs\" onclick=\"add_pf_path_auto("+id_div_pf_path_auto+",'FW');\">";
+        control += "              <span class='glyphicon glyphicon-plus-sign' style='color: #44a3e4;'></span>";
+        control += "      </a>";
+        control += "  </div>";
+        $("div#id_div_pf_path_auto"+id).after(control);
+        id_div_pf_path_auto += 1;
+    }
+
+    function modify_pf_path_auto(id,name) {
+        $("button#id_info_pf_path_auto"+id).attr("value",name);
+        $("button#id_info_pf_path_auto"+id).html(name+"&nbsp;  <span class='caret'></span>");
+    }
+
+    function del_pf_path_auto(id) {
+        $("div#id_div_pf_path_auto"+id).remove();
+    }
+    function check_service_path(service_list,host_list){
+        var vm_map = {};
+        for(var host_index=0; host_index<host_list.length; host_index++){
+            var host = host_list[host_index];
+            for(var vm_index=0; vm_index<host.vm.length; vm_index++){
+                var vm = host.vm[vm_index];
+                if(!vm_map.hasOwnProperty(vm.type)){
+                    vm_map[vm.type] = 0;
+                }
+                vm_map[vm.type] += 1;
+            }
+        }
+        var error_message = null;
+        for(var service_index=0; service_index<service_list.length; service_index++){
+            var service = service_list[service_index];
+            if(!vm_map.hasOwnProperty(service)){
+                //unsuppoert service
+                error_message = "unsuppoert service:"+service;
+                break;
+            }else{
+                if(vm_map[service]<=0){
+                    error_message = "too long service";
+                    break;
+                }else{
+                    vm_map[service] -= 1;//命中
+                }
+            }
+        }
+        return error_message;
+    }
+    function pf_path_auto_policy_content(){
+        var PolicyContent = new Array();
+        $('div#id_div_pf_path_auto').children().each(function(){
+            var tmp = $(this).children().prop("value");
+            if(tmp!=null){
+                PolicyContent.push(tmp);
+            }
+        });
+        var error_message = check_service_path(PolicyContent,pf_phy_path_topo);
+        if(error_message!=null){
+            var error = {error:error_message};
+            return error;
+        }
+        var szPolicyContent = "";
+        for(var index=0; index<PolicyContent.length; index++){
+            szPolicyContent += PolicyContent[index];
+            if(index!=PolicyContent.length-1){
+                szPolicyContent += ",";
+            }
+        }
+        return szPolicyContent;
+    }
+
+    function pf_path_auto_policy_content_clear(){
+        $("div#id_div_pf_path_auto").html(pf_path_auto_tmp);
+    }
+
+    function pf_path_auto_policy_content_modify(content){
+        $("div#id_div_pf_path_auto").html(pf_path_auto_tmp);
+        var array;
+        if(content.indexOf(",")>0){
+            array = content.split(",");
+        }
+        else{
+            array = new Array(content);
+        }
+        //注意：必须倒过来插入
+        for(var i=array.length-1; i>=0; i--){
+            add_pf_path_auto(0,array[i]);
+        }
+    }
+</script>

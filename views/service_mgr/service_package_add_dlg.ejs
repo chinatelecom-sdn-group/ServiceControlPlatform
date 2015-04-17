@@ -1,0 +1,160 @@
+<div class="modal fade" id="modal-container-858025" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form class="form-horizontal" method="post" action="/service_package/add">
+                <fieldset>
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                        <h4 class="modal-title" id="myModalLabel-add" name="myModalLabel-add">
+                            <%= content.dlg_add_title %>
+                        </h4>
+                        <h4 class="modal-title" id="myModalLabel-modify" name="myModalLabel-modify">
+                            <%= content.dlg_modify_title %>
+                        </h4>
+                    </div>
+                    <div class="modal-body"  style="height: 480px;overflow: auto">
+                        <div class="form-group" id="id_modify_dlg_ctrl" name="id_modify_dlg_ctrl">
+                            <label for="inputEmail3" class="col-sm-3 control-label"><%= content.id %></label>
+                            <div class="col-sm-8">
+                                <input type="text" class="form-control" id="inputObjID" name="inputObjID" readonly/>
+                            </div>
+                        </div>
+                        <%for(var i=0; i<model.length; i++){
+                            if(!widget.hasOwnProperty(model[i])){
+                                continue;
+                            }
+                        %>
+                        <div class="form-group">
+                            <label  class="col-sm-3 control-label"><%= content[model[i]] %></label>
+                            <%if(widget[model[i]].type=="select"){%>
+                            <div class="col-sm-8">
+                                <select class="form-control" id="input<%=model[i]%>" name="input<%=model[i]%>">
+                                    <%for(var select_value_index=0;
+                                          select_value_index<widget[model[i]].value.length;
+                                          select_value_index++){%>
+                                    <option  value="<%=widget[model[i]].value[select_value_index]%>"><%=widget[model[i]].value[select_value_index]%></option>
+                                    <%}%>
+                                </select>
+                            </div>
+                            <%} else if(widget[model[i]].type=="multiple_select"){%>
+                            <div class="col-sm-7">
+                                <select multiple="multiple"  class="form-control input-lg" style="height: 250px"
+                                        id="input<%=model[i]%>" name="input<%=model[i]%>">
+                                </select>
+                                <%if(widget[model[i]].hasOwnProperty("help")){%>
+                                <span class=help-block"><%=widget[model[i]].help%></span>
+                                <%}%>
+                            </div>
+                            <div class="col-sm-2">
+                                <button type="button" class="btn btn-sm btn-default" id="id_btn_add" name="id_btn_add">
+                                    <span class="glyphicon glyphicon-plus"></span>
+                                </button>
+                                <button type="button" class="btn btn-sm btn-default" id="id_btn_del" name="id_btn_del">
+                                    <span class="glyphicon glyphicon-minus"></span>
+                                </button>
+                            </div>
+                            <%} else {%>
+                            <div class="col-sm-8">
+                                <input type="text" class="form-control" id="input<%=model[i]%>" name="input<%=model[i]%>" />
+                                <%if(widget[model[i]].hasOwnProperty("help")){%>
+                                <span class=help-block"><%=widget[model[i]].help%></span>
+                                <%}%>
+                            </div>
+                            <%}%>
+                        </div>
+                        <%}%>
+                    </div>
+                    <div class="modal-footer form-actions">
+                        <button type="button" class="btn btn-default" data-dismiss="modal"><%= nav_head.btn_close %></button>
+                        <button type="button" class="btn btn-primary" id="id_btn_add_service_package" name="id_btn_add_service_package" data-dismiss="modal">
+                            <%= nav_head.btn_save %>
+                        </button>
+                        <button type="button" class="btn btn-primary" id="id_btn_modify_service_package" name="id_btn_modify_service_package" data-dismiss="modal">
+                            <%= nav_head.btn_save %>
+                        </button>
+                    </div>
+                </fieldset>
+            </form>
+        </div>
+    </div>
+</div>
+<script>
+    $("document").ready(function(){
+
+    });
+    $("button#id_btn_add").click(function(){
+        $.ajax({
+            type:"get",
+            url:"/service_template/get_content",
+            success:function(msg){
+                $("#modal-container-select-dlg-content").html(msg);
+                $("#modal-container-select-dlg").modal('show');
+            },
+            error:function(err){
+                alert(err);
+            }
+        });
+    });
+    $("button#id_btn_del").click(function(){
+        $("#inputServiceTemplateList option:selected").remove();
+    });
+    $("button#id_btn_add_service_package").click(function(){
+        function_ajax("post");
+    });
+    $("button#id_btn_modify_service_package").click(function(){
+        function_ajax("put");
+    });
+    function function_ajax(type){
+        var tempArray = new Array();
+        <%for(var i=0; i<model.length; i++){%>
+        <%if(widget[model[i]]==null
+        ||widget[model[i]].type==null)
+            continue;
+        %>
+        <%if(widget[model[i]].type=="text"){%>
+        tempArray["<%=model[i]%>"] = $("#input<%=model[i]%>").val();
+        <%}else if(widget[model[i]].type=="select"){%>
+        tempArray["<%=model[i]%>"] = $("#input<%=model[i]%> option:selected").val();
+        <%}else if(widget[model[i]].type=="multiple_select"){%>
+        var tempList = new Array();
+        $("select#input<%=model[i]%> option").each(function(){
+            var tmp = eval("("+$(this).val()+")");
+            if(tmp!=null){
+                var obj = {"_id":tmp._id,"Name":tmp.Name};
+                tempList.push(obj);
+            }
+        });
+        tempArray["<%=model[i]%>Num"] = tempList.length;
+        tempArray["<%=model[i]%>"] = tempList;
+        <%}%>
+        <%}%>
+        $.ajax({
+            type:type,
+            url:"/service_package",
+            data:{
+                id:$("#inputObjID").val(),
+                <%for(var i=0; i<model.length; i++){%>
+                <%if(widget[model[i]]==null
+                    ||widget[model[i]].type==null)
+                        continue;
+                %>
+                <%if(widget[model[i]].type=="multiple_select"){%>
+                "<%=model[i]%>Num" : tempArray["<%=model[i]%>Num"],
+                "<%=model[i]%>" : tempArray["<%=model[i]%>"]
+                <%}else{%>
+                "<%=model[i]%>" : tempArray["<%=model[i]%>"]
+                <%}%>
+                <%if(i<model.length-1){%> ,<%}%>
+                <%}%>
+            },
+            success:function(msg){
+                $("#modal-container-info-dlg-content").html(msg);
+                $("#modal-container-info-dlg").modal('show');
+            },
+            error:function(err){
+                $("#modal-container-info-dlg-content").html(err);
+                $("#modal-container-info-dlg").modal('err');
+            }
+        });
+    }
+</script>

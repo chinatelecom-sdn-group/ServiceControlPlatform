@@ -1,0 +1,22 @@
+<% include ../_main_/head %>
+<% include ../_main_/paginator %>
+<% include ../_main_/body_head %>
+<% include ../_main_/table %>
+<% include ../_main_/body_foot %>
+<script  LANGUAGE="JavaScript">
+    $("document").ready(function(){
+        //分页功能
+        var page=$('#page1');
+        var options = {
+            bootstrapMajorVersion:3,
+            currentPage:page.attr('pageNum'),
+            totalPages:page.attr('pageCount'),
+            numberOfPages:page.attr('numberOfPages'),
+            pageUrl: function(type, page, current){
+                return "session_instance?"+composeUrlParams()+"&p="+page;
+            }
+        };
+        $('#page1').bootstrapPaginator(options);
+    });
+</script>
+<% include ../_main_/foot %>

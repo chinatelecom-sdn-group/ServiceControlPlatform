@@ -1,0 +1,61 @@
+<% include ../_main_/head %>
+<% include ../_main_/paginator %>
+<% include ../_main_/body_head %>
+<% include ./user_config_add_dlg %>
+<% include ../_main_/control %>
+<% include ../_main_/table %>
+<% include ../_main_/body_foot %>
+<script  LANGUAGE="JavaScript">
+    $("document").ready(function(){
+        //分页功能
+        var page=$('#page1');
+        var options = {
+            bootstrapMajorVersion:3,
+            currentPage:page.attr('pageNum'),
+            totalPages:page.attr('pageCount'),
+            numberOfPages:page.attr('numberOfPages'),
+            pageUrl: function(type, page, current){
+                return "user_config?"+composeUrlParams()+"&p="+page;
+            }
+        };
+        $('#page1').bootstrapPaginator(options);
+    });
+
+    $("a#id_modify_user").click(function(){
+        var detail =  $(this).attr('detail');
+        var encoded = eval("("+detail+")");
+        $("input#id_modify_dlg_UserID").attr("value",encoded._id);
+        $("input#id_modify_dlg_UserName").attr("value",encoded.name);
+        $("input#id_modify_dlg_Password").attr("value",encoded.password);
+        $("a#modal-modify").click();
+    });
+
+    $("a#id_btn_add_obj").click(function() {
+        //设置值
+        $("input#inputUserID").attr("value","");
+        $("input#inputUserName").attr("value","");
+        $("input#inputPassword").attr("value","");
+        //设置控件
+        $("h4#id_add_dlg_ctrl").show();
+        $("h4#id_modify_dlg_ctrl").hide();
+        $("div#id_modify_dlg_ctrl").hide();
+        $("button#id_add_dlg_ctrl").show();
+        $("button#id_modify_dlg_ctrl").hide();
+    });
+    $("a#id_modify_user").click(function(){
+        //设置值
+        var detail =  $(this).attr('detail');
+        var encoded = eval("("+detail+")");
+        $("input#inputUserID").attr("value",encoded._id);
+        $("input#inputUserName").attr("value",encoded.name);
+        $("input#inputPassword").attr("value",encoded.password);
+        //设置控件
+        $("h4#id_add_dlg_ctrl").hide();
+        $("h4#id_modify_dlg_ctrl").show();
+        $("div#id_modify_dlg_ctrl").show();
+        $("button#id_add_dlg_ctrl").hide();
+        $("button#id_modify_dlg_ctrl").show();
+        $("#modal-container-858025").modal('show');
+    });
+</script>
+<% include ../_main_/foot %>

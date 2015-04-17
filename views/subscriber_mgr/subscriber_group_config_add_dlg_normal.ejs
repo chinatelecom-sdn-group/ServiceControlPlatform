@@ -1,0 +1,117 @@
+<div class="form-group">
+    <label for="inputServicePackageName" class="col-sm-3 control-label"><%= content.ServiceType %></label>
+    <div class="col-sm-9">
+        <select class="form-control" id="inputServiceType" name="inputServiceType">
+            <option  value="IPTV">IPTV</option>
+            <option  value="Internet">Internet</option>
+            <option  value="VPN">VPN</option>
+            <option  value="value-added">value-added</option>
+        </select>
+    </div>
+</div>
+<div class="form-group">
+    <label for="inputServiceProvider" class="col-sm-3 control-label"><%= content.ServiceProvider %></label>
+    <div class="col-sm-9">
+        <select class="form-control" id="inputServiceProvider" name="inputServiceProvider">
+            <option  value="gd.189.cn">gd.189.cn</option>
+            <option  value="ct.189.cn">ct.189.cn</option>
+        </select>
+    </div>
+</div>
+<div class="form-group">
+    <label for="inputCompany" class="col-sm-3 control-label"><%= content.Company %></label>
+    <div class="col-sm-9">
+        <input type="text" class="form-control" id="inputCompany" name="inputCompany" />
+    </div>
+</div>
+<div class="form-group">
+    <label for="inputServicePackageName" class="col-sm-3 control-label"><%= content.Location %></label>
+    <div class="col-sm-9">
+        <select class="form-control" id="inputLocation" name="inputLocation">
+            <option  value="Canton">Canton</option>
+            <option  value="Beijing">Beijing</option>
+            <option  value="Shanghai">Shanghai</option>
+        </select>
+    </div>
+</div>
+<div class="form-group">
+    <label for="inputSubscriberList" class="col-sm-3 control-label"><%= content.SubscriberList %></label>
+    <div class="col-sm-7">
+        <select multiple="multiple"  class="form-control input-lg" style="height: 250px" id="inputSubscriberList" name="inputSubscriberList">
+
+        </select>
+    </div>
+    <div class="col-sm-2">
+        <button type="button" class="btn btn-sm btn-default" id="id_btn_select_normal_subscriber" name="id_btn_select_normal_subscriber">
+            <span class="glyphicon glyphicon-plus"></span>
+        </button>
+        <button type="button" class="btn btn-sm btn-default" id="id_btn_del_normal_subscriber" name="id_btn_del_normal_subscriber">
+            <span class="glyphicon glyphicon-minus"></span>
+        </button>
+    </div>
+</div>
+<script>
+    function normal_group_content(){
+        var tempList = new Array();
+        $("select#inputSubscriberList option").each(function(){
+            var tmp = eval("("+$(this).val()+")");
+            if(tmp!=null){
+                var obj = {"_id":tmp._id,"Name":tmp.Name};
+                tempList.push(obj);
+            }
+        });
+        var temp = {
+            id:$("input#inputObjID").val(),
+            Name:$("input#inputSubscriberGroupName").val(),
+            Type:"Normal",
+            ServiceType:$("select#inputServiceType option:selected").val(),
+            ServiceProvider:$("select#inputServiceProvider option:selected").val(),
+            Company:$("input#inputCompany").val(),
+            Location:$("select#inputLocation option:selected").val(),
+            SubscriberListNum:tempList.length,
+            SubscriberList:tempList
+        };
+        return temp;
+    }
+
+    function normal_group_content_clear(){
+        $("input#inputServiceType").attr("value","");
+        $("input#inputServiceProvider").attr("value","");
+        $("input#inputCompany").attr("value","");
+        $("input#inputLocation").attr("value","");
+        $("select#inputSubscriberList").html("");
+    }
+
+    function normal_group_content_modify(encoded){
+        $("select#inputServiceType").val(encoded.ServiceType);
+        $("select#inputServiceProvider").val(encoded.ServiceProvider);
+        $("input#inputCompany").attr("value",encoded.Company);
+        $("input#inputLocation").attr("value",encoded.Location);
+        $("select#inputSubscriberList").html("");
+        for (var j=0;j<encoded.SubscriberList.length;j++)
+        {
+            var newOption = "<option value='"+JSON.stringify(encoded.SubscriberList[j])+"'>"+encoded.SubscriberList[j].Name+"</option>";
+            $("select#inputSubscriberList").append(newOption);
+        }
+    }
+
+    $("button#id_btn_select_normal_subscriber").click(function(){
+        $.ajax({
+            type:"get",
+            url:"/subscriber_config/get_content",
+            success:function(msg){
+                $("#select_dlg_subscriber_type").html("normal");
+                $("#select_dlg_title").html("<%= content.dlg_select_subscriber_title %>");
+                $("#modal-container-select-dlg-content").html(msg);
+                $("#modal-container-select-dlg").modal('show');
+            },
+            error:function(err){
+                alert(err);
+            }
+        });
+    });
+
+    $("button#id_btn_del_normal_subscriber").click(function(){
+        $("#inputSubscriberList option:selected").remove();
+    });
+</script>

@@ -1,0 +1,99 @@
+<script type="text/javascript">
+    $(function () {
+        $('#datetimepicker9').datetimepicker({format:"YYYY/MM/DD HH:mm"});
+        $('#datetimepicker10').datetimepicker({format:"YYYY/MM/DD HH:mm"});
+        $("#datetimepicker9").on("dp.change",function (e) {
+            $('#datetimepicker10').data("DateTimePicker").setMinDate(e.date);
+        });
+        $("#datetimepicker10").on("dp.change",function (e) {
+            $('#datetimepicker9').data("DateTimePicker").setMaxDate(e.date);
+        });
+        $("button#id_search_history").click(function(){
+            if($('#start_time').val()==""||$('#end_time').val()==""){
+                $("#modal-container-info-dlg-nofresh-content").html("select time");
+                $("#modal-container-info-dlg-nofresh").modal('show');
+                return;
+            }
+            $.ajax({
+                type:"get",
+                url:"<%-query_url%>",
+                data:
+				{
+					<%-query_fields%>,
+					start:$('#start_time').val(),
+                    end:$('#end_time').val(),
+                    size:$('#time_size option:selected').val()
+				},
+                success:function(msg){
+                    $("#id_history_view").html(msg);
+                },
+                error:function(err){
+                    $("#id_history_view").html(err);
+                }
+            });
+        });
+		
+		function format_date(obj)
+		{
+			return String(obj.getFullYear()+"/"+(obj.getMonth()+1)+"/"+obj.getDate()+" "+obj.getHours()+":"+obj.getMinutes());
+		}
+		//自动激发一次
+        var now = new Date();
+        $('#datetimepicker9').data("DateTimePicker").setDate(new Date(now.getTime()-10*60*1000));
+        $('#datetimepicker10').data("DateTimePicker").setDate(now);
+		$("button#id_search_history").click();
+    });
+</script>
+<form class="form-inline"  id="condiction_search">
+    <div class="panel panel-gsta-sm panel-default" style="margin: 10px;">
+        <div class="panel-body">
+            <div class="row">
+                <div class="col-sm-4 col-md-4 form-group">
+                    <label class="col-md-4 control-label"><%=content.title_start_time%></label>
+                    <div class='col-md-8 input-group input-group-sm date' id='datetimepicker9'>
+                        <input type='text' class="form-control" id="start_time" readonly/>
+                        <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"/></span>
+                    </div>
+                </div>
+                <div class="col-sm-4 col-md-4 form-group">
+                    <label class="col-md-4 control-label"><%=content.title_end_time%></label>
+                    <div class='col-md-8 input-group input-group-sm date' id='datetimepicker10'>
+                        <input type='text' class="form-control" id="end_time" readonly/>
+                        <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"/></span>
+                    </div>
+                </div>
+                <div class="col-sm-4 col-md-3 form-group">
+                    <label class="col-md-5 control-label"><%=content.title_particle_size%></label>
+                    <div class='col-md-7 input-group input-group-sm' >
+                        <select class="combobox form-control" id="time_size" >
+                            <option value="1">1 <%=content.title_minute%></option>
+                            <option value="5">5 <%=content.title_minute%></option>
+                            <option value="10">10 <%=content.title_minute%></option>
+                            <option value="30">30 <%=content.title_minute%></option>
+                            <option value="60">60 <%=content.title_minute%></option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-sm-2 col-md-1 form-group">
+                    <div class='col-md-12 input-group input-group-sm'>
+                                  <span class="input-group-btn">
+                                      <button id="id_search_history" class="btn btn-sm btn-primary" type="button">
+                                          <span class="glyphicon glyphicon-search"></span>
+                                      </button>
+                                  </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+<div id="id_history_view">
+    <div class="panel panel-gsta-sm panel-default" style="margin: 10px;">
+        <div class="panel-body">
+            <center>
+                <img src="images/graph.png" class="img-rounded">
+                <h4><%=content.title_info_show_detail%></h4>
+            </center>
+        </div>
+    </div>
+</div>

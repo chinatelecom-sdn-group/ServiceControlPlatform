@@ -1,0 +1,55 @@
+<div class="modal fade" id="modal-container-select-service-dlg" role="dialog"
+     aria-labelledby="modal-container-select-dlg" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form class="form-horizontal">
+                <fieldset>
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                        <h4 class="modal-title" id="myModalLabel">
+                            <%= content.select_service_package %>
+                        </h4>
+                    </div>
+                    <div class="modal-body" id="modal-container-select-service-dlg-content"
+                         name="modal-container-select-service-dlg-content">
+
+                    </div>
+                    <div class="modal-footer form-actions">
+                        <div class="col-md-8 pull-left">
+                            <div class="input-group input-group-sm">
+                                <input type="text" id="id_search_select" class="form-control">
+                                   <span class="input-group-btn">
+                                      <button id="id_search_select" class="btn btn-default" type="button">
+                                          <span class="glyphicon glyphicon-search"></span> <%= nav_head.btn_search %>
+                                      </button>
+                                  </span>
+                            </div>
+                            <!-- /input-group -->
+                        </div>
+                        <div class="pull-right">
+                            <button type="button" class="btn btn-default"
+                                    data-dismiss="modal"><%= nav_head.btn_close %></button>
+                            <button type="button" class="btn btn-primary" data-dismiss="modal" id="id_btn_add_service"
+                                    name="id_btn_add_service">
+                                <%= nav_head.btn_save %>
+                            </button>
+                        </div>
+                    </div>
+                </fieldset>
+            </form>
+        </div>
+    </div>
+</div>
+<script>
+    $("button#id_btn_add_service").click(function () {
+        $("[name='check_box_service_package']").each(function () {
+            if ($(this).prop("checked")) {
+                if ($(this).val() != null) {
+                    var service_package = eval("("+$(this).val()+")");
+                    var newOption = "<option value='" + $(this).val() + "'>" + service_package.Name + "</option>";
+                    $("#id_service_package_list").append(newOption);
+                }
+            }
+        });
+    });
+</script>

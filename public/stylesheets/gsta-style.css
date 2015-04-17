@@ -1,0 +1,339 @@
+.loading{
+    width:50px;
+    height:56px;
+    position: absolute;
+    top:30%;
+    left:50%;
+    line-height:50px;
+    color:#fff;
+    padding-left:60px;
+    font-size:15px;
+    background: #fff url(images/loading.gif) no-repeat 50%;
+    opacity: 0.7;
+    z-index:9999;
+    -moz-border-radius:20px;
+    -webkit-border-radius:20px;
+    border-radius:20px;
+    filter:progid:DXImageTransform.Microsoft.Alpha(opacity=70);
+}
+.btn-gsta-primary {
+    color: #fff;
+    background-color: #44a3e4;
+    border-color: #44a3e4;
+}
+
+.btn-gsta-default {
+    color: #333;
+    background-color: #fff;
+    border-color: #ccc;
+}
+.btn-gsta-default:hover,
+.btn-gsta-default:focus,
+.btn-gsta-default:active,
+.btn-gsta-default.active,
+.open > .dropdown-toggle.btn-gsta-default {
+    color: #333;
+    background-color: #e6e6e6;
+    border-color: #adadad;
+}
+.btn-gsta-default:active,
+.btn-gsta-default.active,
+.open > .dropdown-toggle.btn-gsta-default {
+    background-image: none;
+}
+.btn-gsta-default.disabled,
+.btn-gsta-default[disabled],
+fieldset[disabled] .btn-gsta-default,
+.btn-gsta-default.disabled:hover,
+.btn-gsta-default[disabled]:hover,
+fieldset[disabled] .btn-gsta-default:hover,
+.btn-gsta-default.disabled:focus,
+.btn-gsta-default[disabled]:focus,
+fieldset[disabled] .btn-gsta-default:focus,
+.btn-gsta-default.disabled:active,
+.btn-gsta-default[disabled]:active,
+fieldset[disabled] .btn-gsta-default:active,
+.btn-gsta-default.disabled.active,
+.btn-gsta-default[disabled].active,
+fieldset[disabled] .btn-gsta-default.active {
+    background-color: #fff;
+    border-color: #ccc;
+}
+.btn-gsta-default .badge {
+    color: #fff;
+    background-color: #333;
+}
+
+.btn-gsta-danger {
+    color: #fff;
+    background-color: #f88742;
+    border-color: #f88742;
+}
+.navbar-gsta-inverse {
+    background-color: #fff;
+    border-color: #fff;
+}
+.navbar-gsta-inverse .navbar-brand {
+    color: #fff;
+}
+.navbar-gsta-inverse .navbar-brand:hover,
+.navbar-gsta-inverse .navbar-brand:focus {
+    color: #2980B9;
+    background-color: transparent;
+}
+.navbar-gsta-inverse .navbar-text {
+    color: #777;
+}
+.navbar-gsta-inverse .navbar-nav > li > a {
+    color: #fff;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    line-height: 5px;
+}
+.navbar-gsta-inverse .navbar-nav > li > a:hover,
+.navbar-gsta-inverse .navbar-nav > li > a:focus {
+    color: #fff;
+    background-color: #4f9dca;
+    border-radius: 4px;
+}
+.navbar-gsta-inverse .navbar-nav > .active > a,
+.navbar-gsta-inverse .navbar-nav > .active > a:hover,
+.navbar-gsta-inverse .navbar-nav > .active > a:focus {
+    color: #fff;
+    background-color: #f88742;
+    background-color: #44a3e4;
+    border-radius: 4px;
+}
+.navbar-gsta-inverse .navbar-nav > .disabled > a,
+.navbar-gsta-inverse .navbar-nav > .disabled > a:hover,
+.navbar-gsta-inverse .navbar-nav > .disabled > a:focus {
+    color: #ccc;
+    background-color: transparent;
+}
+.navbar-gsta-inverse .navbar-toggle {
+    border-color: #44a3e4;
+}
+.navbar-gsta-inverse .navbar-toggle:hover,
+.navbar-gsta-inverse .navbar-toggle:focus {
+    background-color: #44a3e4;
+}
+.navbar-gsta-inverse .navbar-toggle .icon-bar {
+    background-color: #888;
+}
+.navbar-gsta-inverse .navbar-collapse,
+.navbar-gsta-inverse .navbar-form {
+    border-color: #44a3e4;
+}
+.navbar-gsta-inverse .navbar-nav > .open > a,
+.navbar-gsta-inverse .navbar-nav > .open > a:hover,
+.navbar-gsta-inverse .navbar-nav > .open > a:focus {
+    color: #ffffff;
+    background-color: #44a3e4;
+}
+@media (max-width: 767px) {
+    .navbar-gsta-inverse .navbar-nav .open .dropdown-menu > li > a {
+        color: #44a3e4;
+    }
+    .navbar-gsta-inverse .navbar-nav .open .dropdown-menu > li > a:hover,
+    .navbar-gsta-inverse .navbar-nav .open .dropdown-menu > li > a:focus {
+        color: #44a3e4;
+        background-color: transparent;
+    }
+    .navbar-gsta-inverse .navbar-nav .open .dropdown-menu > .active > a,
+    .navbar-gsta-inverse .navbar-nav .open .dropdown-menu > .active > a:hover,
+    .navbar-gsta-inverse .navbar-nav .open .dropdown-menu > .active > a:focus {
+        color: #2980B9;
+        background-color: #3498DB;
+    }
+    .navbar-gsta-inverse .navbar-nav .open .dropdown-menu > .disabled > a,
+    .navbar-gsta-inverse .navbar-nav .open .dropdown-menu > .disabled > a:hover,
+    .navbar-gsta-inverse .navbar-nav .open .dropdown-menu > .disabled > a:focus {
+        color: #ccc;
+        background-color: transparent;
+    }
+}
+.navbar-gsta-inverse .navbar-link {
+    color: #3498DB;
+}
+.navbar-gsta-inverse .navbar-link:hover {
+    color: #2980B9;
+}
+.navbar-gsta-inverse .btn-link {
+    color: #3498DB;
+}
+.navbar-gsta-inverse .btn-link:hover,
+.navbar-gsta-inverse .btn-link:focus {
+    color: #2980B9;
+}
+.navbar-gsta-inverse .btn-link[disabled]:hover,
+fieldset[disabled] .navbar-gsta-inverse .btn-link:hover,
+.navbar-gsta-inverse .btn-link[disabled]:focus,
+fieldset[disabled] .navbar-gsta-inverse .btn-link:focus {
+    color: #ccc;
+}
+
+.panel-gsta-sm,
+.panel-gsta-group-sm > .panel {
+    padding: 0px 0px;
+    font-size: 10px;
+    line-height: 1.5;
+    border-radius: 0px;
+}
+
+.form-inline .control-label {
+    padding-top: 7px;
+    margin-bottom: 0;
+    text-align: right;
+}
+
+.panel-gsta-body {
+    padding-top: 0px;
+    padding-bottom: 0px;
+    padding-right: 0px;
+    margin: 0;
+}
+
+/* Sticky footer styles
+-------------------------------------------------- */
+html {
+    position: relative;
+    min-height: 100%;
+}
+body {
+    /* Margin bottom by footer height */
+    margin-bottom: 60px;
+}
+.footer {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    /* Set the fixed height of the footer here */
+    height: 60px;
+    padding-top: 6px;
+    background-color: #f5f5f5;
+}
+
+
+/* Custom page CSS
+-------------------------------------------------- */
+/* Not required for template or sticky footer method. */
+
+.container-fluid {
+    width: 100%;
+    max-width: 2048px;
+    padding: 0 15px;
+}
+.container-fluid .text-muted {
+    margin: 20px 0;
+}
+
+.breadcrumb{
+    background-color: #2980B9;
+}
+
+/* custom inclusion of right, left and below tabs */
+
+.tabs-below > .nav-tabs,
+.tabs-right > .nav-tabs,
+.tabs-left > .nav-tabs {
+    border-bottom: 0;
+}
+
+.tab-content > .tab-pane,
+.pill-content > .pill-pane {
+    display: none;
+}
+
+.tab-content > .active,
+.pill-content > .active {
+    display: block;
+}
+
+.tabs-below > .nav-tabs {
+    border-top: 1px solid #ddd;
+}
+
+.tabs-below > .nav-tabs > li {
+    margin-top: -1px;
+    margin-bottom: 0;
+}
+
+.tabs-below > .nav-tabs > li > a {
+    -webkit-border-radius: 0 0 4px 4px;
+    -moz-border-radius: 0 0 4px 4px;
+    border-radius: 0 0 4px 4px;
+}
+
+.tabs-below > .nav-tabs > li > a:hover,
+.tabs-below > .nav-tabs > li > a:focus {
+    border-top-color: #ddd;
+    border-bottom-color: transparent;
+}
+
+.tabs-below > .nav-tabs > .active > a,
+.tabs-below > .nav-tabs > .active > a:hover,
+.tabs-below > .nav-tabs > .active > a:focus {
+    border-color: transparent #ddd #ddd #ddd;
+}
+
+.tabs-left > .nav-tabs > li,
+.tabs-right > .nav-tabs > li {
+    float: none;
+}
+
+.tabs-left > .nav-tabs > li > a,
+.tabs-right > .nav-tabs > li > a {
+    min-width: 74px;
+    margin-right: 0;
+    margin-bottom: 3px;
+}
+
+.tabs-left > .nav-tabs {
+    float: left;
+    margin-right: 19px;
+    border-right: 1px solid #ddd;
+}
+
+.tabs-left > .nav-tabs > li > a {
+    margin-right: -1px;
+    -webkit-border-radius: 4px 0 0 4px;
+    -moz-border-radius: 4px 0 0 4px;
+    border-radius: 4px 0 0 4px;
+}
+
+.tabs-left > .nav-tabs > li > a:hover,
+.tabs-left > .nav-tabs > li > a:focus {
+    border-color: #eeeeee #dddddd #eeeeee #eeeeee;
+}
+
+.tabs-left > .nav-tabs .active > a,
+.tabs-left > .nav-tabs .active > a:hover,
+.tabs-left > .nav-tabs .active > a:focus {
+    border-color: #ddd transparent #ddd #ddd;
+    *border-right-color: #ffffff;
+}
+
+.tabs-right > .nav-tabs {
+    float: right;
+    margin-left: 19px;
+    border-left: 1px solid #ddd;
+}
+
+.tabs-right > .nav-tabs > li > a {
+    margin-left: -1px;
+    -webkit-border-radius: 0 4px 4px 0;
+    -moz-border-radius: 0 4px 4px 0;
+    border-radius: 0 4px 4px 0;
+}
+
+.tabs-right > .nav-tabs > li > a:hover,
+.tabs-right > .nav-tabs > li > a:focus {
+    border-color: #eeeeee #eeeeee #eeeeee #dddddd;
+}
+
+.tabs-right > .nav-tabs .active > a,
+.tabs-right > .nav-tabs .active > a:hover,
+.tabs-right > .nav-tabs .active > a:focus {
+    border-color: #ddd #ddd #ddd transparent;
+    *border-left-color: #ffffff;
+}

@@ -1,0 +1,259 @@
+<div class="form-group">
+    <label  class="col-sm-3 control-label"><%= content.pf_template_offset %></label>
+    <div class="col-sm-9">
+        <input type="text" class="form-control" id="inputPFTempateOffset" name="inputPFTempateOffset" />
+    </div>
+</div>
+<div class="form-group">
+    <label  class="col-sm-3 control-label"><%= content.pf_template %></label>
+    <div class="col-sm-9">
+        <div class="cover" style="border: 1px solid #D6D6D6;padding: 5px; line-height:2" id="id_div_pf_template" name="id_div_pf_template">
+
+        </div>
+    </div>
+</div>
+<script>
+    var regS = new RegExp("@index","g");
+    var regFlag = new RegExp("@checkbox","g");
+    var regName = new RegExp("@name","g");
+    var regLength = new RegExp("@length","g");
+    var regValue = new RegExp("@value","g");
+    var div_field = "";
+    div_field += "<div class='input-group form-inline'  id='id_div_pf_template_field@index' name='id_div_pf_template_field@index' style='margin: 3px;'>";
+    div_field += "	<div class='input-group col-md-1'>";
+    div_field += "		<a id='add_field_before@index' name='add_field_before@index' class='btn' onclick='add_pf_template_field_before(@index);' style='margin-top: 5px'>";
+    div_field += "			<span class='glyphicon glyphicon-plus-sign' style='color: #44a3e4;'></span>";
+    div_field += "		</a>";
+    div_field += "	</div>";
+    div_field += "	<div class='input-group form-inline col-md-10' style='border:#c9c9c9 solid thin;' id='content'>";
+    div_field += "		<input id='match_key' class='col-md-1' type='checkbox' @checkbox style='margin-top: 5px'/>";
+    div_field += "		<input id='name' type='text' class='col-md-2' placeholder='name' style='margin: 2px' value='@name'/>";
+    div_field += "		<input id='length' type='text' class='col-md-2' placeholder='length' style='margin: 2px' value='@length'/>";
+    div_field += "		<input id='value' type='text' class='col-md-5' placeholder='value' style='margin: 2px' value='@value'/>";
+    div_field += "		<a class='btn col-md-1' onclick='del_pf_template_field(@index);' style='margin-top: 5px'>";
+    div_field += "			<span class='glyphicon glyphicon-remove' style='color: #f88742;'></span>";
+    div_field += "		</a>";
+    div_field += "	</div>";
+    div_field += "	<div class='input-group col-md-1'>";
+    div_field += "		<a id='add_field_after@index' name='add_field_after@index' class='btn' onclick='add_pf_template_field_after(@index);' style='margin-top: 5px'>";
+    div_field += "			<span class='glyphicon glyphicon-plus-sign' style='color: #44a3e4;'></span>";
+    div_field += "		</a>";
+    div_field += "	</div>";
+    div_field += "</div>";
+    //针对没有field的情况
+    var div_add_control = "";
+    div_add_control += "<div class='input-group form-inline'  id='id_div_pf_template_field0' name='id_div_pf_template_field0' style='margin: 2px;'>";
+    div_add_control += "	<a  class='btn' onclick='add_pf_template_field();' style='margin-top: 5px'>";
+    div_add_control += "		<span class='glyphicon glyphicon-plus-sign' style='color: #44a3e4;'></span>";
+    div_add_control += "	</a>";
+    div_add_control += "</div>";
+    var id_div_pf_template_field = 0;
+    $("document").ready(function(){
+        id_div_pf_template_field = $('div#id_div_pf_template').children().length+1;
+    });
+
+    function build_pf_template_field(name,length,value,flag){
+        id_div_pf_template_field += 1;
+        var control = div_field.replace(regS,id_div_pf_template_field);
+        control = control.replace(regName,name);
+        control = control.replace(regLength,length);
+        control = control.replace(regValue,value);
+        if(flag=="Y"){
+            control = control.replace(regFlag,"checked='true'");
+        }else{
+            control = control.replace(regFlag,"");
+        }
+        return control;
+    }
+
+    function add_pf_template_field(){
+        var control = build_pf_template_field("","","");
+        $("div#id_div_pf_template").html(control);
+    }
+
+    function add_pf_template_field_before(id){
+        var control = build_pf_template_field("","","");
+        $("div#id_div_pf_template_field"+id).before(control);
+    }
+
+    function add_pf_template_field_after(id){
+        var control = build_pf_template_field("","","");
+        $("div#id_div_pf_template_field"+id).after(control);
+    }
+
+
+    function del_pf_template_field(id) {
+        $("div#id_div_pf_template_field"+id).remove();
+        if ( $("div#id_div_pf_template").html() =="" ) {
+            id_div_pf_template_field = 0;
+            $("div#id_div_pf_template").html(div_add_control);
+        }
+    }
+    function paddingBinaryString(binString,length){
+        if(binString.length<length){
+            var add_bit_len = length-binString.length;
+            for(var i=0; i<add_bit_len; i++){
+                binString = "0" + binString;//前面补位
+            }
+        }else if(binString.length>length){
+            var sub_bit_len = binString.length-length;
+            binString = binString.substring(sub_bit_len);
+        }
+        return binString;
+    }
+    function paddingHexString(hexString,length){
+        return paddingBinaryString(hexString,length);
+    }
+    function parseValueToBinaryString(value){
+        //B：二进制 Q：八进制 D：十进制 H：十六进制 （后缀）
+        // 0x:16进制 @:文字 （前缀）
+        var temp = "";
+        if(value.indexOf("@")==0) {
+            //文字
+            for(var i=1;i<value.length;i++){
+                var char = value.charCodeAt(i).toString(2);//字符转化成Ascii码 .
+                //补齐
+                temp += paddingBinaryString(char,8);
+            }
+        }else if(value.indexOf("0x")==0||value.indexOf("0X")==0){
+            //16进制
+            value = value.substring(2);
+            temp = parseInt(value,16).toString(2);//转为2进制
+        }else if(value.indexOf("B")==value.length-1){
+            //2进制
+            value = value.substring(0,value.length-1);
+            temp = parseInt(value,2).toString(2);//转为2进制;
+        }else if(value.indexOf("Q")==value.length-1){
+            //8进制
+            value = value.substring(0,value.length-1);
+            temp = parseInt(value,8).toString(2);//转为2进制
+        }else if(value.indexOf("D")==value.length-1){
+            //10进制
+            value = value.substring(0,value.length-1);
+            temp = parseInt(value).toString(2);//转为2进制
+        }else if(value.indexOf("H")==value.length-1){
+            //16进制
+            value = value.substring(0,value.length-1);
+            temp = parseInt(value,16).toString(2);//转为2进制
+        }else{
+            //十进制
+            temp = parseInt(value).toString(2);
+        }
+        return temp;
+    }
+    function fieldToBinaryString(value,length){
+        //转为二进制
+        var temp = parseValueToBinaryString(value);
+        //补齐长度或者删减长度
+        return paddingBinaryString(temp,length);
+    }
+    function binaryToHex(binaryString,binaryStringLength){
+        var result = "";
+        if(binaryString.length<=32){
+            result =  parseInt(binaryString,2).toString(16);
+        }else{
+            var result = "";
+            for(var end=binaryString.length; end>0; end-=32) {
+                var start = end - 32;
+                if (start < 0) {
+                    start = 0;
+                }
+                var temp = binaryString.substring(start, end);
+                temp = paddingHexString(parseInt(temp, 2).toString(16), 8);//转换并补位
+                result = temp + result;//补位
+            }
+        }
+        var hexStringLength = (binaryStringLength/8)*2;
+        if(binaryStringLength%8>0){
+            hexStringLength += 2;
+        }
+        if(result.length>hexStringLength){
+            result = result.substr(result.length-hexStringLength);
+        }else{
+            result = paddingHexString(result,hexStringLength);
+        }
+        return result;
+    }
+    function pf_template_policy_content(){
+        var PolicyContent ={
+            "name":"",
+            "offset":0,
+            "head":"",
+            "fields":[]
+        };
+        var MatchKeyArray = new Array();
+        var MatchKey = null;
+        var LastFlag = "N";
+        var Index = 0;
+        PolicyContent.name =  $("#inputPolicyName").val();
+        PolicyContent.offset =  $("#inputPFTempateOffset").val();
+        var binaryString = "";
+        $('div#id_div_pf_template').children().each(function(){
+            var szFlag = "N";
+            var flag = $(this).children("#content").children("#match_key").prop("checked");
+            if(flag){
+                szFlag = "Y";
+            }else{
+                szFlag = "N";
+            }
+            var name = $(this).children("#content").children("#name").val();
+            var length = parseInt($(this).children("#content").children("#length").val());
+            var value = $(this).children("#content").children("#value").val();
+            var filed = {
+                name:name,
+                length:length,
+                value:value,
+                flag:szFlag
+            };
+            PolicyContent.fields.push(filed);
+            if(szFlag=="Y"){
+                if(LastFlag=="N"||MatchKey==null){
+                    MatchKey = new Array();
+                    MatchKeyArray.push(MatchKey);
+                }
+                MatchKey.push(filed);
+            }
+            LastFlag = szFlag;//记录上一个flag
+        });
+        if(MatchKeyArray.length==0){
+            return {error:"must select 1 field as match key at least!"};
+        }
+        //计算
+        PolicyContent.head = "";
+        for(var i=0; i<MatchKeyArray.length; i++){
+            var subHead = "(";
+            var binaryString = "";
+            var binaryStringLength = 0;
+            var MatchKey = MatchKeyArray[i];
+            for(var j=0; j<MatchKey.length; j++){
+                var filed = MatchKey[j];
+                var temp = fieldToBinaryString(filed.value,filed.length);
+                binaryString  = binaryString + temp;
+                binaryStringLength += filed.length;
+            }
+            subHead += binaryToHex(binaryString,binaryStringLength);
+            subHead += ")";
+            PolicyContent.head += subHead;
+            if(i!=MatchKeyArray.length-1){
+                PolicyContent.head += ",";
+            }
+        }
+        return $.toJSON(PolicyContent);
+    }
+
+    function pf_template_policy_content_clear(){
+        $("input#inputPFTempateOffset").attr("value",0);
+        $("div#id_div_pf_template").html(div_add_control);
+    }
+
+    function pf_template_policy_content_modify(content){
+        var PolicyContent = eval("("+content+")");
+        var ControlList = "";
+        //组织控件
+        for(var i=0; i<PolicyContent.fields.length; i++){
+            ControlList += build_pf_template_field(PolicyContent.fields[i].name,PolicyContent.fields[i].length,PolicyContent.fields[i].value,PolicyContent.fields[i].flag);
+        }
+        $("div#id_div_pf_template").html(ControlList);
+        $("input#inputPFTempateOffset").attr("value",PolicyContent.offset);
+    }
+</script>

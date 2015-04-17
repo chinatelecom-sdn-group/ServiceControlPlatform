@@ -1,0 +1,144 @@
+<% include ../_main_/head %>
+<% include ../_main_/paginator %>
+<% include ../_main_/body_head %>
+<% include ../_main_/control %>
+<% include ../_main_/table_project %>
+<% include ./project_config_add_dlg%>
+<% include ./project_config_select_service_dlg%>
+<% include ./project_config_select_subscriber_dlg%>
+<% include ../_main_/body_foot %>
+<script  LANGUAGE="JavaScript">
+    $("document").ready(function(){
+        //分页功能
+        var page=$('#page1');
+        if( $.getUrlVar("querydata")){
+            document.getElementById("input_search").value = $.getUrlVar("querydata");
+        }
+        var querydata = document.getElementById("input_search").value;
+        var options = {
+            bootstrapMajorVersion:3,
+            currentPage:page.attr('pageNum'),
+            totalPages:page.attr('pageCount'),
+            numberOfPages:page.attr('numberOfPages'),
+            pageUrl: function(type, page, current){
+                return "project_config?"+composeUrlParams()+"&p="+page;
+            }
+        };
+        $('#page1').bootstrapPaginator(options);
+    });
+    $("button#id_search").click(function(){
+        var querydata = document.getElementById("input_search").value;
+        window.location = "http://127.0.0.1:3000/project_config?p=-1"+"&querydata="+querydata;
+    });
+
+    $("a#id_active_project").click(function(){
+        var project_str = $(this).closest('tr').attr('detail');
+        var project =  eval("("+ project_str +")");
+        var td_project_state = $(this).closest('tr').children(":eq(3)");
+        if(td_project_state.html()=="Deleting"||td_project_state.html()=="Creating"){
+            return;
+        }
+        $.ajax({
+            type:"post",
+            url:"/project_config/active",
+            data:
+            {
+                id:project._id,
+                name:project.Name,
+                MasterId:project.MasterId,
+                state:$.trim(td_project_state.html()),
+                SubscriberGroupList:project.SubscriberGroupList,
+                ServicePackageList:project.ServicePackageList
+                //IDPairs:eval("("+IDPairs+")")
+            },
+            beforeSend:function(XMLHttpRequest){
+                $("span#icon-"+project._id).attr("class","glyphicon glyphicon-time");
+                if(project.State=='Active') {
+                    td_project_state.html("Deleting");
+                }else if(project.State=='InActive'){
+                    td_project_state.html("Creating");
+                }
+            },
+            error:function(XMLHttpRequest){
+                if(state=='Active') {
+                    td_project_state.attr("class","glyphicon glyphicon-pause");
+                }else if(state=='InActive'){
+                    td_project_state.attr("class","glyphicon glyphicon-play");
+                }
+            },
+            success:function(msg){
+                if(msg.state=='Active'){//判断状态
+                    $("span#icon-"+msg.id).attr("class","glyphicon glyphicon-pause");
+                    td_project_state.html("Active");
+                }else{
+                    $("span#icon-"+msg.id).attr("class","glyphicon glyphicon-play");
+                    td_project_state.html("InActive");
+                }
+            }
+        });
+    });
+    $("a#id_btn_add_obj").click(function() {
+        //值设置
+        $("input#inputProjectID").attr("value","");
+        $("input#inputMasterProjectID").attr("value","");
+        $("input#inputProjectName").attr("value","");
+        $("select#id_subscriber_group_list").html("");
+        $("select#id_service_package_list").html("");
+        //控件设置
+        $("h4#myModalLabel-add").show();
+        $("h4#myModalLabel-add-slave").hide();
+        $("h4#myModalLabel-modify").hide();
+        $("div#id_div_project_id").hide();
+        $("button#id_btn_modify_project").hide();
+        $("button#id_btn_add_project").show();
+    });
+    $("a#id_btn_add_slave").click(function() {
+        //值设置
+        var masterPorjectId =  $(this).attr('masterId');
+        var masterPorjectName =  $(this).attr('masterName');
+        $("input#inputMasterProjectID").attr("value",masterPorjectId);
+        $("label#labelMasterProjectName").html(masterPorjectName);
+        $("input#inputProjectID").attr("value","");
+        $("input#inputProjectName").attr("value","");
+        $("select#id_subscriber_group_list").html("");
+        $("select#id_service_package_list").html("");
+        //控件设置
+        $("h4#myModalLabel-add").hide();
+        $("h4#myModalLabel-add-slave").show();
+        $("h4#myModalLabel-modify").hide();
+        $("div#id_div_project_id").hide();
+        $("button#id_btn_modify_project").hide();
+        $("button#id_btn_add_project").show();
+        $("#modal-container-858025").modal("show");
+    });
+    $("a#id_btn_modify_obj").click(function(){
+        //值设置
+        var content =  $(this).closest('tr').attr('detail');
+        var project = eval("("+content+")");
+        $("input#inputProjectID").attr("value",project._id);
+        $("input#inputMasterProjectID").attr("value",project.MasterId);
+        $("input#inputProjectName").attr("value",project.Name);
+        $("select#id_subscriber_group_list").html("");
+        $("select#id_service_package_list").html("");
+        var subscriber_group_list = project.SubscriberGroupList;
+        var service_package_list = project.ServicePackageList;
+        for (var i=0;i<subscriber_group_list.length;i++)
+        {
+            var newOption = "<option value='"+JSON.stringify(subscriber_group_list[i])+"'>"+subscriber_group_list[i].Name+"</option>";
+            $("#id_subscriber_group_list").append(newOption);
+        }
+        for (var j=0;j<service_package_list.length;j++)
+        {
+            var newOption = "<option value='"+JSON.stringify(service_package_list[j])+"'>"+service_package_list[j].Name+"</option>";
+            $("#id_service_package_list").append(newOption);
+        }
+        //控件设置
+        $("h4#myModalLabel-add").hide();
+        $("h4#myModalLabel-add-slave").hide();
+        $("h4#myModalLabel-modify").show();
+        $("div#id_div_project_id").show();
+        $("button#id_btn_modify_project").show();
+        $("button#id_btn_add_project").hide();
+        $("#modal-container-858025").modal("show");
+    });
+</script>

@@ -1,0 +1,40 @@
+#main_view{height:30%;}
+
+#canvasDiv {
+    width:100%;
+    height:400px;
+//z-index:1;
+    background-color: #CCCCCC;
+    overflow:hidden;
+    FILTER: progid:DXImageTransform.Microsoft.Gradient(gradientType=0,startColorStr=#b8c4cb,endColorStr=#f6f6f8); /*IE*/
+    background:-moz-linear-gradient(top,#b8c4cb,#f6f6f8);/*火狐*/
+    background:-webkit-gradient(linear, 0% 0%, 0% 100%,from(#b8c4cb), to(#f6f6f8));/*谷歌*/
+//background:-webkit-gradient(linear, 0% 0%, 0% 100%,from(#f6f6f8), to(#b8c4cb));/*谷歌*/
+//border: 1px solid #000;
+//-moz-border-radius: 10px;
+//-webkit-border-radius: 10px;
+}
+
+#main_view
+{
+//border: 1px solid #000;
+// -moz-border-radius: 10px;
+// -webkit-border-radius: 10px;
+}
+
+#device_line
+{
+    height:2px;
+    width:100%;
+//z-index:1;
+    background:black;
+    cursor:row-resize;
+}
+
+#detail_area{
+    width:100%;
+    height:inherit;
+//border: 1px solid #000;
+    -moz-border-radius: 10px;
+    -webkit-border-radius: 10px;
+}

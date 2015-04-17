@@ -1,0 +1,21 @@
+#!/usr/bin/expect
+set timeout 4
+spawn telnet [lindex $argv 0]
+#login
+#expect "login:" 
+#send "[lindex $argv 1]\n"
+expect "Password:"
+send "[lindex $argv 2]\n"
+#input command
+expect "\<H3C\>"
+send "screen-length disable\n"
+expect "\<H3C\>"
+send "display ppp access-user interface g 1/0\n"
+expect "\<H3C\>"
+send "display user-profile\n"
+expect "\<H3C\>"
+send "quit\n"
+expect "*Connection closed*"
+expect eof
+
+exit
